@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>Profile</title>
+
+	<script src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<script src='<?php echo base_url(); ?>assets/js/jquery-ui-1.10.0.custom.min.js'></script>
+	<!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo base_url(); ?>assets/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+	
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/function.js'></script>
+	
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+	<!-- <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link> -->
+	<!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<style type="text/css">
+	body{
+		background-color: #F1F1F1;
+		margin: 0;
+		padding: 0;
+	}
+	.wrapper{
+	    width: 60%;
+	    background-color: white;
+	    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+	    margin-left: auto;
+	    margin-right: auto;
+	    margin-top: 50px;
+	    padding-top: 40px;
+	    padding-bottom: 40px;
+	}
+	.input{
+		background-color: #F1F1F1 !important;
+		height: 40px;
+		border-radius: 0px !important;
+		width: 100%;
+	}
+	.select{
+		background-color: #F1F1F1 !important;
+		height: 40px;
+		border: 1px solid black;
+		border-radius: 0px;
+		width: 100%;
+	}
+	table{
+		width: 80%;
+		margin-right: auto;
+		margin-left: auto;
+		margin-top: 50px;	
+	}
+	.cell{
+		padding-top: 20px;
+	}
+	.btn-save{
+		height: 40px; 
+		background-color: orange; 
+		width: 200px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 30px;
+		border-radius: 50px;
+	}
+	.btn-save:hover{
+		background-color: #FFAA7F;
+		cursor: hand;
+	}
+	.photo{
+		width: 150px;
+		height: 150px;
+		border-radius: 100px;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 10px;
+		
+	}
+	.loading-wrapper {
+			float: center;
+			width: 50px;
+			margin-left: auto;
+			margin-right: auto;
+			padding-top: 20px;
+			padding-bottom: 20px;
+		}
+
+		.loader {
+			border: 5px solid #f3f3f3;
+			/* Light grey */
+			border-top: 5px solid #3498db;
+			/* Blue */
+			border-radius: 50%;
+			width: 50px;
+			height: 50px;
+			animation: spin 2s linear infinite;
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+		@media screen and (max-width:800px){
+			.wrapper{
+			    width: 100%;
+			    background-color: white;
+			    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+			    margin-left: auto;
+			    margin-right: auto;
+			    margin-top: 50px;
+			    padding-top: 40px;
+			    padding-bottom: 40px;
+			}
+		}
+</style>
+
+<body>
+	<div id="header"></div>
+	
+	<div style="height: 50px;"></div>
+
+	<div class="wrapper">
+
+		<!-- Modal -->
+		<div class="modal fade" id="change-image" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog"  role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="event-title"><span>Change your profile photo</span></h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body-description">
+						<!-- event description goes here -->
+						<div class="photo" >
+							<img id="photos" src="" class="photo">
+						</div>
+						<div style="width: 98px; margin-left: auto; margin-right: auto; margin-top: 30px;">
+							<input type="file" name="" id="new-photo" style="width: 98px;height: 30px; border:0px solid white;">
+						</div>
+						
+						<!-- hidden input to store the id category -->
+						<input type="hidden" id="id-store">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" onclick="sendUri()">Ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal upload progress-->
+		<div class="modal toggle" id="upload-proccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog"  role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="event-title"><span>Saving your change ...</span></h5>
+						
+					</div>
+					<div class="modal-body-description">
+						<!-- loader -->
+						<div class="loading-wrapper" id="loader-show">
+							<div class="loader"></div>
+						</div>
+
+						<div class="alert alert-danger" id="failled-message">
+							<strong>FAILLED!</strong> Please Try again.
+						</div>
+						
+					</div>
+					
+				</div>
+			</div>
+		</div>
+
+		<?php
+			
+			foreach ($user as $row) {
+				if($row['photo'] == null){
+					$uri = base_url() . '/assets/img/user.png';
+					echo '
+						<div class="photo" onclick="changeProfile()">
+							<img src="'.$uri.'" class="photo" id="profile">
+							<input type="hidden" id="uri" value="'. $uri .'" name="">
+							<input type="hidden" id="uri-change" value="'. $uri .'" name="">
+						</div>
+						';
+				}
+				else{
+					$uri = base_url() . '/' . $row['photo'] ;
+					echo '
+						<div class="photo" onclick="changeProfile()">
+							<img src="'.$uri.'" class="photo" id="profile">
+							<input type="hidden" id="uri" value="'. $uri .'" name="">
+							<input type="hidden" id="uri-change" value="'. $uri .'" name="">
+						</div>
+						';
+				}
+
+				if($row['gender'] == 'male'){
+					$gn = '<select id="gender" class="form-control input">
+								<option value="male" checked>Male</option>
+								<option value="female">Female</option>
+							</select>';
+				}
+				else{
+					$gn = '<select id="gender" class="form-control input">
+								<option value="female" checked>Female</option>
+								<option value="male" >Male</option>
+							</select>';
+				}
+
+				echo '
+					<table border="0px solid black">
+						<tr >
+							<td class="cell">Name</td>
+							<td class="cell">:</td>
+							<td class="cell">
+								<input type="text" class="form-control input" style="" name="" id="name" value="' . $row["name"] . '">
+							</td>
+						</tr>
+						<tr >
+							<td class="cell">Email</td>
+							<td class="cell">:</td>
+							<td class="cell">
+								<input class="form-control input" type="text" name="" id="email" value="' . $row["email"] . '">
+							</td>
+						</tr>
+						<tr>
+							<td class="cell">Phone Number</td>
+							<td class="cell">:</td>
+							<td class="cell">
+								<input class="form-control input" type="text" name="" id="phone" value="' . $row["phone_number"] . '">
+							</td>
+						</tr>
+						<tr>
+							<td class="cell">Gender</td>
+							<td class="cell">:</td>
+							<td class="cell">
+								'.$gn.'
+							</td>
+						</tr>
+						<tr>
+							<td class="cell">Birthday</td>
+							<td class="cell">:</td>
+							<td class="cell">
+								<input class="form-control input" type="text" name="" id="date" value="' . $row["birthday"] . '">
+							</td>
+						</tr>
+					</table>
+
+					<div class="btn-save" onclick="saveChange(' . $row["user_id"] . ')">
+						<div style="margin-right: auto; margin-left: auto; width: 100px; padding-top: 10px; color: white; font-size: 12pt;" >Save Change</div>
+					</div>
+
+				';
+
+				
+			}
+		?>
+		
+		
+	</div>
+	<!-- footer -->
+	<div id="footer" style="margin-top: 40px;">
+
+	</div>
+	<script type="text/javascript">
+		$("#header").load('<?php echo site_url("c_create_event/header_load"); ?>');
+		$("#footer").load('<?php echo site_url("c_create_event/footer_load"); ?>');
+		function saveChange(id){
+			var form_data = new FormData();
+			form_data.append("name", $("#name").val());
+			form_data.append("email", $("#email").val());
+			form_data.append("phone", $("#phone").val());
+			form_data.append("gender", $("#gender").val());
+			form_data.append("birthday", $("#date").val());
+			form_data.append("id", id);
+			if($("#uri").val() == $("#uri-change").val()){
+				// alert("foto tdk berubah");
+				$.ajax({
+					method: 'POST',
+					url: "<?php echo site_url('c_user_profile/edit_without_image'); ?>",
+					data: form_data,
+					contentType: false,
+					cache: false,
+					processData: false,
+					dataType: 'json',
+					beforeSend : function(){
+						$("#upload-proccess").modal("toggle");
+					},
+					success: function (data) {
+						//alert("sukses");
+						$("#upload-proccess").modal("hide");
+					},
+					error: function (data) {
+						$("#upload-proccess").modal("hide");
+					}
+				});
+			}
+			else{
+				//alert("foto berubah");
+				var files = $("#new-photo")[0].files;
+				form_data.append("files[]", files[0]);
+				$.ajax({
+					method: 'POST',
+					url: "<?php echo site_url('c_user_profile/edit_profile'); ?>",
+					data: form_data,
+					contentType: false,
+					cache: false,
+					processData: false,
+					dataType: 'json',
+					beforeSend : function(){
+						$("#upload-proccess").modal("toggle");
+					},
+					success: function (data) {
+						//alert("sukses");
+						$("#upload-proccess").modal("toggle");
+					},
+					error: function (data) {
+						alert(JSON.stringify(data));
+						console.log(data);
+					}
+				});
+			}
+		}
+
+		function changeProfile(){
+			$("#photos").attr('src', $("#uri-change").val());
+			$("#change-image").modal('show');
+		}
+		//change foto profile 
+		$("#new-photo").on('change',function(){
+			change(this);
+		});
+		function change(input){
+			for (i = 0; i < 1; i++) {
+				var name = input.files[i].name;
+				var extension = name.split('.').pop().toLowerCase();
+				if (jQuery.inArray(extension, ['png', 'jpg', 'jpeg']) == false) {
+					error = "error";
+					alert("File type is not allowed, please choos another file (.png, .jpg, or .jpeg)");
+				}
+				else{
+          		var reader = new FileReader();
+         	 	reader.onload = function (event) {
+		            	$("#photos").attr('src',event.target.result);
+		            	$("#uri-change").val(event.target.result);
+		            	$("#profile").attr('src', $("#uri-change").val());
+	        		}
+	        		reader.readAsDataURL(input.files[0]);
+	        	}
+	      
+			}
+		}
+
+		function sendUri(){
+			$("#profile").attr('src', $("#uri-change").val());
+			$("#change-image").modal('hide');
+		}
+			
+		$(document).ready(function(){
+			
+
+			//date
+			$("#failled-message").hide();
+		    $( "#date" ).datepicker({
+		        defaultDate: "+1w",
+		        changeMonth: true,
+		        numberOfMonths: 2,
+		        dateFormat: 'yy-mm-dd',
+		        onClose: function( selectedDate ) {
+		            $( "#date" ).datepicker( "option", "minDate", selectedDate );
+		        }
+		    });
+		});
+	</script>
+	
+</body>
+
+</html>

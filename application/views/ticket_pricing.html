@@ -1,0 +1,63 @@
+<div id='ticket-wrapper' >
+    <div class='label-text type-event' style="margin-top: 30px;">Let's make your ticket now</div>
+    <div class='label-text' style="margin-top: 20px;">Number of ticket</div>
+         <input type='number' value='1' class='input-event' id='numberTicket'>
+    <div class='label-text' style="margin-top: 30px;">Maximum ticket per order</div>
+        <input type='number' value='1' class='input-event' id='maximum-order'>
+    <div id='ticket-body' class='ticket ticket-text'>
+        <div class='left-side'>
+            <div class='logo'></div>
+            <div class='barcode'></div>
+            <div class='price'> 
+                 Price : Rp<input id="ticket-price" type='text' placeholder='50.000' style='width:100px;'>
+            </div>
+        </div>
+        <div class='right-side'>
+             <div class='ticket-title' align='center'>
+                <input type='text' placeholder='ticket title' id='ticketTitle' class='input-event'>
+            </div>
+            <div class='ticket-date'>
+                <table border='0px solid'>
+                    <tr>
+                       <td>Date</td>
+                        <td>:</td>
+                         <td>
+                            <span id="ticket-dateStart">
+                            
+                            </span>
+                        </td>
+                        <td>-</td>
+                         <td>
+                            <span id="ticket-dateEnd">
+                            
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Time</td>
+                        <td>:</td>
+                        <td>
+                            <span id="ticket-timeStart">
+                            
+                            </span>
+                        </td>
+                        <td>-</td>
+                        <td>
+                            <span id="ticket-timeEnd">
+                            
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            <div id="ticket-location"></div>
+            </div>
+            <div class='ticket-title'>
+                <textarea class='input-event-transparent' rows='5' cols='10' id='ticketDescription' placeholder='Your Event Description'>
+                </textarea> 
+            </div>
+            <div class='sosmed-wrapper'>
+                <input type='text' placeholder='facebook' id="fb"><input type='text' placeholder='e-mail' id="email"><input type='text' placeholder='Phone Number' id="p-number">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link>
+	<!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<!-- link fontawesome css from CDN -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
+	<title>Notifications</title>
+	<style type="text/css">
+		body{
+		background-color: #F1F1F1;
+		margin: 0;
+		padding: 0;
+	}
+	.wrapper{
+	    width: 50%;
+	    background-color: white;
+	    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+	    margin-left: auto;
+	    margin-right: auto;
+	    margin-top: 2px;
+	    padding: 10px 10px 10px 10px;
+	}
+	.input{
+		background-color: #F1F1F1;
+		height: 40px;
+		border-radius: 0px;
+		width: 100%;
+	}
+	.photo{
+		height: 50px;
+		width: 50px;
+		background-color: grey;
+		border-radius: 25px;
+	}
+	.name{
+		text-align: center;
+		width: 40%;
+		height: 50px;
+		background-color: red;
+		position: relative;
+		margin-top: -50px;
+		margin-left: 60px;
+		
+	}
+	.email{
+		text-align: center;
+		width: 40%;
+		height: 50px;
+		background-color: blue;
+		position: relative;
+		margin-top: -50px;
+		margin-left: 52%;
+	}
+	.add{
+		width: 8%;
+		height: 50px;
+		background-color: yellow;
+		position: relative;
+		margin-top: -50px;
+		margin-left: 92%;
+	}
+	/*slider*/
+		.switch {
+		  position: relative;
+		  display: inline-block;
+		  width: 40px;
+		  height: 24px;
+		}
+
+		.switch input {display:none;}
+
+		.slider {
+		  position: absolute;
+		  cursor: pointer;
+		  top: 0;
+		  left: 0;
+		  right: 0;
+		  bottom: 0;
+		  background-color: #ccc;
+		  -webkit-transition: .4s;
+		  transition: .4s;
+		}
+
+		.slider:before {
+		  position: absolute;
+		  content: "";
+		  height: 16px;
+		  width: 16px;
+		  left: 4px;
+		  bottom: 4px;
+		  background-color: white;
+		  -webkit-transition: .4s;
+		  transition: .4s;
+		}
+
+		input:checked + .slider {
+		  background-color: orange;
+		}
+
+		input:focus + .slider {
+		  box-shadow: 0 0 1px #2196F3;
+		}
+
+		input:checked + .slider:before {
+		  -webkit-transform: translateX(16px);
+		  -ms-transform: translateX(16px);
+		  transform: translateX(16px);
+		}
+
+		/* Rounded sliders */
+		.slider.round {
+		  border-radius: 34px;
+		}
+
+		.slider.round:before {
+		  border-radius: 50%;
+		}
+		.menu-dot{
+			text-align : left; 
+			width : 100%; 
+			color: gray;
+		}
+		.menu-dot:hover{
+			background-color: rgba(255,255,180,0.8);
+			cursor: pointer;
+		}
+		.menu-btn{
+			font-size : 20pt;
+		}
+		.menu-btn:hover{
+			cursor: pointer;
+			color: gray;
+		}
+		.btn-outline:active{
+			outline: none;
+			border-width: 0px;
+		}
+	@media screen and (max-width:600px){
+			.wrapper{
+			    width: 100%;
+			    background-color: white;
+			    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+			    margin-left: auto;
+			    margin-right: auto;
+			    margin-top: 2px;
+			    padding: 10px 10px 10px 10px;
+			}
+			.email-user{
+				display: none;
+			}
+		}
+	
+	</style>
+</head>
+
+<body>
+	<div id="header"></div>
+	
+	<div style="height: 50px;"></div>
+	<div id="list">
+		<?php
+			if(count($notifications) == 0){
+				//no notif
+			}
+			else{
+				foreach ($notifications as $row) {
+					if($row["notif_type"] == "invitation"){
+						$btn = "Hai, I invited you to an event, click button bellow to see the event.";
+						$time = substr($row["time"],0,16);
+						if($row["original_photo"] == null){
+							$url = base_url() . '/assets/img/user.png';
+						}
+						else{
+							$url = base_url() . "" . $row["original_photo"];
+						}
+
+						if($row["read_message"] == "yes"){
+							$message = '<i class="fas fa-envelope-open"></i> invitation';
+						}
+						else{
+							$message = '<i class="fas fa-envelope"></i> new invitation';
+						}
+						
+						echo '
+						<div class="list-all" style="margin-top : 10px;" >
+							<div class="wrapper">
+								'.$message.'
+								<div style="font-size: 8pt; margin-left: 20px;">'.$time.'</div>
+								<div style="height: 10px;"></div>
+							<table border="0px solid black" style="width: 100%;">
+								<tr>
+									<td style="width: 50px;">
+										<div style="height: 50px;width: 50px; background-color: gray; border-radius: 25px;">
+										<img src="'.$url.'" style="height : 50px; width : 50px; border-radius : 25px;" />
+										</div>
+									</td>
+									<td style="padding-left: 10px;">
+										<b>'.$row["name"].'</b>
+									</td>
+									
+								</tr>
+								<tr>
+									<td style="width: 50px;">
+										
+									</td>
+									<td style="padding-left: 10px;">'.$btn.'<br>
+										<button class="btn btn-primary btn-sm btn-outline" style="border-radius: 20px; background-color: #FC0F69; border-width: 0px;" onclick="viewEvent('.$row["content"].')">View invited event</button>
+									</td>
+									
+								</tr>
+							</table>
+						</div>
+						</div>
+						';
+					}
+					else if($row["notif_type"] == "message"){
+						$btn = "Hi, your ticket reservation has been successfully confirmed, please go to transaction menu -> view your transaction.";
+						$time = substr($row["time"],0,16);
+						if($row["original_photo"] == null){
+							$url = base_url() . '/assets/img/user.png';
+						}
+						else{
+							$url = base_url() . "" . $row["original_photo"];
+						}
+
+						if($row["read_message"] == "yes"){
+							$message = '<i class="fas fa-envelope-open"></i> message';
+						}
+						else{
+							$message = '<i class="fas fa-envelope"></i> new message';
+						}
+						echo '
+						<div class="list-all" style="margin-top : 10px;" >
+							<div class="wrapper" >
+								<div id="header-message">'.$message.'</div>
+								<div style="font-size: 8pt; margin-left: 20px;">'.$time.'</div>
+								<div style="height: 10px;"></div>
+							<table border="0px solid black" style="width: 100%;">
+								<tr>
+									<td style="width: 50px;">
+										<div style="height: 50px;width: 50px; background-color: gray; border-radius: 25px;">
+											<img src="'.$url.'" style="height : 50px; width : 50px; border-radius : 25px;" />
+										</div>
+									</td>
+									<td style="padding-left: 10px;">
+										<b>'.$row["name"].'</b>
+									</td>
+									
+								</tr>
+								<tr>
+									<td style="width: 50px;">
+										
+									</td>
+									<td style="padding-left: 10px;">'.substr($btn, 0,20) . "...".'<br>
+										<button class="btn btn-success btn-sm btn-outline" style="border-radius: 20px; border-width: 0px;" onclick="openMessage('.$row["content"].')">Read more</button>
+									</td>
+									
+								</tr>
+							</table>
+						</div>
+						</div>
+
+						 <!-- Modal -->
+					      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					        <div class="modal-dialog modal-lg" role="document">
+					          <div class="modal-content">
+					            <div class="modal-header">
+					              <h5 class="modal-title" id="exampleModalLabel">Message</h5>
+					              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					                <span aria-hidden="true">&times;</span>
+					              </button>
+					            </div>
+					            <div class="modal-body">
+					            	<table>
+					            		<tr>
+					            			<td> <div style="height: 50px;width: 50px; background-color: gray; border-radius: 25px;">
+												<img src="'.$url.'" style="height : 50px; width : 50px; border-radius : 25px;" />
+									</div></td>
+					            			<td><b>'.$row["name"].'</b></td>
+					            		</tr>
+					            		<tr>
+					            			<td></td>
+					            			<td style="font-size : 10pt;">'.$time.'</td>
+					            		</tr>
+					            	</table>
+						           <br>
+					           		 '.$btn.' 
+					            
+					            </div>
+					            <div class="modal-footer">
+					              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					            </div>
+					          </div>
+					        </div>
+					      </div>
+						';
+					}
+				}
+				if(count($notifications) == 1){
+					echo '
+						<div style="height : 200px;"></div>
+					';
+				}
+			}
+		?>
+	</div>
+
+	<!-- footer -->
+	<div id="footer" style="margin-top: 40px;"></div>
+
+	<script type="text/javascript">
+		$("#header").load('<?php echo site_url("c_create_event/header_load"); ?>');
+		$("#footer").load('<?php echo site_url("c_create_event/footer_load"); ?>');
+		function openMessage(id){
+			$("#exampleModal").modal("show");
+			$.ajax({
+				type : "POST",
+				url : "<?php echo site_url('c_user_profile/read_notif')?>",
+				data : {"id" : id},
+				dataType : 'json',
+				success : function(res){
+					$("#header-message").html('<i class="fas fa-envelope-open"></i> message');
+				},
+				error : function(err){
+					alert("Ups, something were wrong");
+				}
+			});
+		}
+
+		function viewEvent(id){
+			$.ajax({
+				type : "POST",
+				url : "<?php echo site_url('c_user_profile/read_notif')?>",
+				data : {"id" : id},
+				dataType : 'json',
+				success : function(res){
+					$.ajax({
+						method : "post",
+						url : '<?php echo site_url("c_create_event/add_event_views"); ?>',
+						data : {"id" : id},
+						dataType : 'json',
+						success : function(res){
+							document.location.href = "<?php echo site_url('c_create_event/view_event/')?>"+id;
+						},
+						error : function(err){
+
+						}
+					});
+				},
+				error : function(err){
+
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>

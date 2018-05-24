@@ -1,0 +1,160 @@
+<div id="list-address" style="overflow: auto; padding: 10px;">
+	please transfer the total amount of the above price through one of the banks below
+	<div style="height: 20px;"></div>
+	<div style="width: 25%; min-width: 300px; height: 200px; background-color: white; float: left;box-shadow: 0 0 8px 0 rgba(0,0,0,0.2); padding: 10px; font-weight: bold; font-size: 12pt;">
+		<img src="<?php echo base_url(); ?>assets/img/bri.png" style="width: 100%; height: auto;">
+		<div style="height: 40px;"></div>
+		No. Rekening : 1232 4353 0004 <br>
+		Atas Nama : inmap.com<br>
+		Alamat : Denpasar, Bali
+	</div>
+	<div style="width: 25%; min-width: 300px; margin-left: 5%; height: 200px; background-color: white; float: left;box-shadow: 0 0 8px 0 rgba(0,0,0,0.2); padding: 10px; font-weight: bold; font-size: 12pt;">
+		<img src="<?php echo base_url(); ?>assets/img/bni.png" style="width: 100%; height: auto;">
+		<div style="height: 20px;"></div>
+		No. Rekening : 1232 4353 0004 <br>
+		Atas Nama : inmap.com<br>
+		Alamat : Denpasar, Bali
+	</div>
+	<div style="width: 25%; min-width: 300px; margin-left: 5%; height: 200px; background-color: white; float: left;box-shadow: 0 0 8px 0 rgba(0,0,0,0.2); padding: 10px; font-weight: bold; font-size: 12pt;">
+		<img src="<?php echo base_url(); ?>assets/img/bca.png" style="width: 100%; height: auto;">
+		<div style="height: 20px;"></div>
+		No. Rekening : 1232 4353 0004 <br>
+		Atas Nama : inmap.com<br>
+		Alamat : Denpasar, Bali
+	</div>
+	<div style="width: 25%; min-width: 300px; margin-top: 5%; height: 200px; background-color: white; float: left;box-shadow: 0 0 8px 0 rgba(0,0,0,0.2); padding: 10px; font-weight: bold; font-size: 12pt;">
+		<img src="<?php echo base_url(); ?>assets/img/mandiri.png" style="width: 100%; height: auto;">
+		<div style="height: 20px;"></div>
+		No. Rekening : 1232 4353 0004 <br>
+		Atas Nama : inmap.com<br>
+		Alamat : Denpasar, Bali
+	</div>
+	<div style="height: 50px;"></div>
+	
+
+</div>
+<hr>
+<div style="height: 50px;"></div>
+if you have transfer please send picture proof of payment
+<div class="input-image-form" align="center">
+	<form method="post" action="" id="upload-form" enctype="multipart/form-data">
+		<label  class="fileContainer">
+			<i class="fas fa-images"></i>
+			Choose Your Image
+			<input type="file" name="files" id="files">
+		</label>
+	</form>
+
+	<div class="gallery" align="center"></div>
+	</div>
+	<hr>
+	click the button below to upload and confirm your payment
+	<table style="width : 100%; text-align: center;">
+		<tr>
+		<td style="padding-top: 50px;">
+			<button class="btn btn-danger" id="btn-confirm" style="border-radius : 20px; width : 350px; background-color: #FC0F69;">payment confirmation</button>
+		</td>
+	</tr>
+	</table>
+	after uploading proof of payment is successful, then your transaction will be checked maximum 1 x 24 hours
+
+<script type="text/javascript">
+	//preiew imag when choose proof tranfer
+	//display image before upload
+	var imagesPreview = function (input, placeToInsertImagePreview) {
+        if (input.files) {
+            if ($(".event-image-input").length != 0) {
+                $(".event-image-input").remove();
+            }
+            var filesAmount = input.files.length;
+
+            for (i = 0; i <= 0; i++) {
+                var reader = new FileReader();
+                var reader2 = new FileReader();
+                var readerALl = new FileReader();
+
+                readerALl.onload = function (event) {
+                    $($.parseHTML('<img>')).attr({
+                        'src': event.target.result,
+                        'class': 'event-image-input',
+                        
+                    }).appendTo(placeToInsertImagePreview);
+
+                }
+                readerALl.readAsDataURL(input.files[i]);
+            }
+        }
+
+    };
+    $('#files').on('change', function () {
+        imagesPreview(this, 'div.gallery');
+    });
+
+    //confirm payment button clicked
+  		$('#btn-confirm').click(function(){
+  			// alert($("#transaction-id").val());
+  			var image = document.getElementById("files").files;
+  			if(image.length == 0){
+  				alert("Please Choose image first!");
+  			}
+  			else{
+  				var files = $("#files")[0].files;
+				var error = '';
+				var tr_id = $("#transaction-id").val();
+				var eID = $('#event-id').val();
+				var form_data = new FormData();
+				//get date time
+				var time = new Date();
+				var date = time.getDate();
+				var month = time.getMonth()+1;
+				var years = time.getFullYear();
+				var hours = time.getHours();
+				var minutes = time.getMinutes();
+
+				if(date < 10){
+					date = "0"+date; 
+				}
+				if(month < 10){
+				 	month = "0"+month;
+				}
+				if(hours < 10){
+					hours = "0"+hours;
+				}
+				if(minutes < 10){
+					minutes = "0"+minutes;
+				}
+				var dateNow = years+"-"+month+"-"+date+" "+hours+":"+minutes;
+				form_data.append("time", dateNow);
+				form_data.append("tr_id", tr_id);
+  				for (var i = 0; i < files.length; i++) {
+					var name = files[i].name;
+					var extension = name.split('.').pop().toLowerCase();
+					if (jQuery.inArray(extension, ['jpg','png','jpeg', 'gif'])) {
+						error = "error";
+						alert("Image type not allowed");
+					} else {
+						form_data.append("files[]", files[i]);
+					}
+				}
+				if(error == ''){
+					$.ajax({
+						method: 'POST',
+						url: "<?php echo site_url('c_create_event/payment_confirmation'); ?>",
+						data: form_data,
+						contentType: false,
+						cache: false,
+						processData: false,
+						dataType: 'json',
+						success: function (data) {
+							alert("Your confirmation is successfull, click ok to continue");
+							window.location.replace("<?php echo site_url('c_create_event/view_my_transaction/'); ?>"+eID+"/"+tr_id);
+						},
+						error: function (data) {
+							alert("error");
+							console.log(data);
+						}
+					});
+				}
+  			}
+  		});
+</script>

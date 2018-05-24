@@ -1,0 +1,7 @@
+baru dilakukan :
+ - baru sampai membuat slider pada map
+
+hal yg akan dilakukan :
+- membuat komentar dan menampilkan komentar pada event
+- coba ganti niceEdit, sering bug soalnya
+- vide youtube url sering bug, membawa nilai undefined ke database dan akhirnya ketika menampilkan error

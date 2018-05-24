@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Infriend</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>infriend</title>
+
+	<script src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<script src='<?php echo base_url(); ?>assets/js/jquery-ui-1.10.0.custom.min.js'></script>
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+	<!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo base_url(); ?>assets/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+	<!-- link fontawesome css from CDN -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link>
+	<!-- Link Swiper's CSS -->
+	<style type="text/css">
+		body{
+		background-color: #F1F1F1;
+		margin: 0;
+		padding: 0;
+	}
+	.wrapper{
+	    width: 60%;
+	    background-color: white;
+	    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+	    margin-left: auto;
+	    margin-right: auto;
+	    padding-top: 10px;
+	    padding-bottom: 10px;
+	}
+	</style>
+</head>
+<body>
+	<div id="header"></div>
+
+	<div style="height: 50px;"></div>
+	<div style="width: 60%; margin-left: auto; margin-right: auto;">
+		<button id="goto-add-infriend" class="btn btn-primary" style="border-radius: 0px;">Add Infriend</button>
+	</div>
+	<div style="height: 20px;"></div>
+	<?php
+		foreach ($infriend as $row) {
+			if($row["original_photo"] == null){
+				$url = base_url() . '/assets/img/user.png';
+			}
+			else{
+				$url = base_url() . '/' . $row["original_photo"];
+			}
+			echo '
+				<div class="list-all">
+					 <div class="wrapper" id="'.$row["infriend_id"].'">
+					 	<table border="0pxx solid black" style="width: 100%;">
+					 		<tr>
+					 			<td style="width:55px; padding-left : 10px;">
+					 				<div class="photo"><img src="'.$url.'" style="width:50px; height: 50px;" ></div>
+					 			</td>
+					 			<td style="width:40%;">
+					 				<div>' .$row["name"]. '</div>
+					 			</td>
+					 			<td class="email-user" style="width:40%;">
+					 				<div >'.$row["email"].'</div>
+					 			</td>
+					 			<td style="text-align:right;">
+					 				<div>
+					 					<button class="btn btn-danger" onclick="deleteFriend('.$row["infriend_id"].',\''.$row["name"].'\')" style="border-radius: 0px; margin-right: 2px;">delete</button>
+					 				</div>
+					 			</td>
+					 		</tr>
+					 	</table>
+					 </div> 
+				</div>
+			';
+		}
+	?>
+
+	<!-- footer -->
+		<div id="footer" style="margin-top: 40px;">
+
+		</div>
+
+	<script type="text/javascript">
+		$("#header").load('<?php echo site_url("c_create_event/header_load"); ?>');
+		$("#footer").load('<?php echo site_url("c_create_event/footer_load"); ?>');
+		$("#goto-add-infriend").click(function(){
+			document.location.href = "<?php echo site_url('c_add_infriend');?>";
+		});
+
+		function deleteFriend(id, name){
+			if(confirm("Are you sure want to remove "+name+" from your infriend list ?") == true){
+				$.ajax({
+					method : "POST",
+					url :  "<?php echo site_url('c_infriend/remove_friend'); ?>",
+					data : {"id" : id},
+					dataType : 'json',
+					success : function(res){
+						alert(res);
+						$("#"+id).remove();
+					},
+					error : function(){
+						alert("An error has occurred");
+					}
+				});
+			}
+			else{
+
+			}
+		}
+	</script>
+</body>
+</html>

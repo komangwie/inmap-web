@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>inmap | book tickets</title>
+
+	<script src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<script src='<?php echo base_url(); ?>assets/js/jquery-ui-1.10.0.custom.min.js'></script>
+	<!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="<?php echo base_url(); ?>assets/css/jquery-ui.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo base_url(); ?>assets/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+	<!-- link fontawesome css from CDN -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link>
+	<!-- Link Swiper's CSS -->
+	<link rel="stylesheet" href="<?php echo base_url(); ?>swiper-4.1.6/dist/css/swiper.css"></link>
+
+	<style type="text/css">
+		.body{
+		background-color: #F1F1F1;
+		margin: 0;
+		padding: 0;
+		height: 100%;
+		width: 100%;
+	}
+	.input{
+		background-color: #F1F1F1 !important;
+		height: 40px;
+		border-radius: 0px !important;
+		width: 40%;
+	}
+	.wrapper{
+	    width: 60%;
+	    overflow: auto;
+	    background-color: white;
+	    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+	    margin-left: auto;
+	    margin-right: auto;
+	    margin-top: 2%;
+	    margin-bottom: auto;
+	}
+	.event a {
+	    background-color: #5FBA7D !important;
+	    color: #ffffff !important;
+	}
+	.img-blur{
+		width: 100%;
+		height: 500px;
+		filter: blur(20px);
+	}
+	</style>
+</head>
+
+<body class="body">
+	<div id="header"></div>
+	<!-- save id into a input to permanetn store, free access -->
+	<?php
+		echo '
+		<input type="hidden" id="event-id" value="'.$event_id.'">
+		<input type="hidden" id="ticket-id" value="'.$ticket[0]["ticket_id"].'">
+		';
+	?>
+	<div>
+	<!-- display ticket if ticket is available -->
+	<?php 
+		
+			// check is tickets are free or paid
+			if($ticket[0]["price"] > 0){
+				$price ='Rp'. number_format($ticket[0]["price"],2,',','.');
+				echo '
+						<input id="price" type="hidden" value="'.$ticket[0]["price"].'">
+						<div class="wrapper" style="width: 90%; padding: 20px;">
+							<div id="ticket-wrapper" style="overflow: auto; height : 390px;">
+						    <div class="label-text type-event">
+						    	<i class="fas fa-ticket-alt" style="color : orange;"></i>
+						    	event tickets
+						    </div>
+						    
+						    <div id="ticket-body" class="ticket ticket-text">
+						        <div class="left-side">
+						            <div class="logo"></div>
+						            <div style=" width: 120px;height: 120px; position: relative; margin-left: auto; margin-right: auto;margin-top: 20px;">
+					            	
+					            	</div>
+						            <div class="price" id="ticket-price"> 
+						                Price : '.$price.'
+						            </div>
+						        </div>
+						        <div class="right-side">
+						             <div class="ticket-title" style="margin-top: 5px;" align="center" id="ticket-title">
+						                <h4>'.$ticket[0]["ticket_title"] .'</h4>
+						            </div>
+						            <div class="ticket-date">
+						                <table border="0px solid">
+						                    <tr>
+						                       <td>Date</td>
+						                        <td>:</td>
+						                         <td>
+						                            <span id="ticket-dateStart">
+						                            	'.$ticket[0]["dateStart"] .'
+						                            </span>
+						                        </td>
+						                        <td>-</td>
+						                         <td>
+						                            <span id="ticket-dateEnd">
+						                            	'.$ticket[0]["dateEnd"] .'
+						                            </span>
+						                        </td>
+						                    </tr>
+						                    <tr>
+						                        <td>Time</td>
+						                        <td>:</td>
+						                        <td>
+						                            <span id="ticket-timeStart">
+						                            	'.$ticket[0]["timeStart"] .'
+						                            </span>
+						                        </td>
+						                        <td>-</td>
+						                        <td>
+						                            <span id="ticket-timeEnd">
+						                            	'.$ticket[0]["timeEnd"] .'
+						                            </span>
+						                        </td>
+						                    </tr>
+						                </table>
+						            <div id="ticket-address">
+						            	Location : '.$ticket[0]["address"] .'
+						            </div>
+						            </div>
+						            <div class="ticket-title" id="ticket-desc" style="padding-top : 20px; text-align: center;">
+						                '. $ticket[0]["ticket_description"]  .'
+						            </div>
+						            <!-- <div class="sosmed-wrapper">
+						                <input type="text" placeholder="facebook" id="fb"><input type="text" placeholder="e-mail" id="email"><input type="text" placeholder="Phone Number" id="p-number">
+						            </div> -->
+						            <div style="margin-top: 60px;">
+						            	<table border="0px solid black" style="width : 100%; text-align : center;">
+						            		<tr>
+						            			<td>'.urldecode($ticket[0]["facebook"]).'</td>
+						            			<td>'.$ticket[0]["email"].'</td>
+						            			<td>'.$ticket[0]["phone"].'</td>
+						            		</tr>
+						            	</table>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+
+						<div>
+						<table style="width : 100%; text-align : left;">
+							<tr>
+								<td>
+									<div style="padding-top : 10px; color : red;">
+										<h5>'.$price.'</h5>
+									</div>
+								</td>
+							</tr>
+						</table>
+						<div>Ticket remaining : '.$ticket[0]["ticket_remaining"].' tickets<div>
+						select number of tickets, maximum order of '.$ticket[0]["max_order"].' tickets
+							<input id="qty" type="number" value="1" class="form-control input" min="1" max="'.$ticket[0]["max_order"].'">
+							<input type="hidden" value="'.$ticket[0]["max_order"].'" id="max-order">
+						</div>
+						<input type="hidden" id="total" value="'.$ticket[0]["price"].'">
+						<table>
+							<tr>
+								<td style="font-size : 20pt; color:red;">
+								Total price =
+								</td>
+								<td>
+								 <div id="total-price" style="font-size : 20pt; color : red;"></div>
+								</td>
+							</tr>
+						</table>
+						<!-- button continue -->
+						<table style="width : 100%; text-align : center;">
+							<tr>
+								<td>
+									<button class="btn btn-success" id="btn-book" style="border-radius : 20px; width : 350px;">I am ready, let\'s proceed to the payment</button>
+								</td>
+							</tr>
+						</table>
+						<!-- payment method -->
+						<div>
+							<div id="payment-method">
+								
+							</div>
+							<!-- display bank address if user choose bank transfered method -->
+							<hr>
+							<div id="bank-address">
+								
+
+							</div>
+						</div>
+						</div>
+						</div>
+						';
+			}
+			else{
+				$price = "FREE";
+				echo '
+						<input id="price" type="hidden" value="'.$ticket[0]["price"].'">
+						<div class="wrapper" style="width: 90%; padding: 20px;">
+							<div id="ticket-wrapper" style="overflow: auto; height : 390px;">
+						    <div class="label-text type-event">
+						    	<i class="fas fa-ticket-alt" style="color : orange;"></i>
+						    	event tickets
+						    </div>
+						    
+						    <div id="ticket-body" class="ticket ticket-text">
+						        <div class="left-side">
+						            <div class="logo"></div>
+						               <div style=" width: 120px;height: 120px; position: relative; margin-left: auto; margin-right: auto;margin-top: 20px;">
+					            	
+					            		</div>
+						            <div class="price" id="ticket-price"> 
+						                Price : '.$price.'
+						            </div>
+						        </div>
+						        <div class="right-side">
+						             <div class="ticket-title" style="margin-top: 5px;" align="center" id="ticket-title">
+						                <h4>'.$ticket[0]["ticket_title"] .'</h4>
+						            </div>
+						            <div class="ticket-date">
+						                <table border="0px solid">
+						                    <tr>
+						                       <td>Date</td>
+						                        <td>:</td>
+						                         <td>
+						                            <span id="ticket-dateStart">
+						                            	'.$ticket[0]["dateStart"] .'
+						                            </span>
+						                        </td>
+						                        <td>-</td>
+						                         <td>
+						                            <span id="ticket-dateEnd">
+						                            	'.$ticket[0]["dateEnd"] .'
+						                            </span>
+						                        </td>
+						                    </tr>
+						                    <tr>
+						                        <td>Time</td>
+						                        <td>:</td>
+						                        <td>
+						                            <span id="ticket-timeStart">
+						                            	'.$ticket[0]["timeStart"] .'
+						                            </span>
+						                        </td>
+						                        <td>-</td>
+						                        <td>
+						                            <span id="ticket-timeEnd">
+						                            	'.$ticket[0]["timeEnd"] .'
+						                            </span>
+						                        </td>
+						                    </tr>
+						                </table>
+						            <div id="ticket-address">
+						            	Location : '.$ticket[0]["address"] .'
+						            </div>
+						            </div>
+						            <div class="ticket-title" id="ticket-desc" style="padding-top : 20px; text-align: center;">
+						                '. $ticket[0]["ticket_description"]  .'
+						            </div>
+						            <!-- <div class="sosmed-wrapper">
+						                <input type="text" placeholder="facebook" id="fb"><input type="text" placeholder="e-mail" id="email"><input type="text" placeholder="Phone Number" id="p-number">
+						            </div> -->
+						            <div style="margin-top: 60px;">
+						            	<table border="0px solid black" style="width : 100%; text-align : center;">
+						            		<tr>
+						            			<td>'.urldecode($ticket[0]["facebook"]).'</td>
+						            			<td>'.$ticket[0]["email"].'</td>
+						            			<td>'.$ticket[0]["phone"].'</td>
+						            		</tr>
+						            	</table>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+
+						<div>
+						<table style="width : 100%; text-align : left;">
+							<tr>
+								<td>
+									<div style="padding-top : 10px; color : red;">
+										<h5>'.$price.'</h5>
+									</div>
+								</td>
+							</tr>
+						</table>
+						<div>Ticket remaining : '.$ticket[0]["ticket_remaining"].' tickets<div>
+						select number of tickets, maximum order of '.$ticket[0]["max_order"].' tickets
+							<input id="qty" type="number" value="1" class="form-control input" min="1" max="'.$ticket[0]["max_order"].'">
+							<input type="hidden" value="'.$ticket[0]["max_order"].'" id="max-order">
+						</div>
+						<input type="hidden" id="total" value="'.$ticket[0]["price"].'">
+						<table>
+							<tr>
+								<td style="font-size : 20pt; color:red;">
+								Total price =
+								</td>
+								<td>
+								 <div id="total-price" style="font-size : 20pt; color : red;"></div>
+								</td>
+							</tr>
+						</table>
+						<!-- button continue -->
+						<table style="width : 100%; text-align : center;">
+							<tr>
+								<td>
+									<button class="btn btn-success" id="btn-book" style="border-radius : 20px; width : 350px;">I am ready, let\'s proceed to the payment</button>
+								</td>
+							</tr>
+						</table>
+						<!-- payment method -->
+						<div>
+							<div id="payment-method">
+								
+							</div>
+							<!-- display bank address if user choose bank transfered method -->
+							<hr>
+							<div id="bank-address">
+								
+
+							</div>
+						</div>
+						</div>
+						</div>
+						';
+			}
+			
+	?>
+	</div>
+	<!-- footer -->
+		<div id="footer" style="margin-top: 40px;">
+
+		</div>
+
+	<!-- bootstrap js file -->
+	<script src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+ <script>
+ 	//load header and footer
+  	$("#header").load('<?php echo site_url("c_create_event/header_load"); ?>');
+	$("#footer").load('<?php echo site_url("c_create_event/footer_load"); ?>');
+  	$(document).ready(function(){
+  		//bnt continue clicker
+  		$('#btn-book').click(function(){
+  			if($("#bank").length == 0){
+  				var id = $("#ticket-id").val();
+  				var unit = $("#price").val();
+  				var tot = $("#total").val();
+  				var item =  $('#qty').val();
+  				var trID = 1;
+  				var eID = $("#event-id").val();
+
+  				//get date time
+  				var time = new Date();
+				var date = time.getDate();
+				var month = time.getMonth()+1;
+				var years = time.getFullYear();
+				var hours = time.getHours();
+				var minutes = time.getMinutes();
+
+				if(date < 10){
+					date = "0"+date; 
+				}
+				if(month < 10){
+				 	month = "0"+month;
+				}
+				if(hours < 10){
+					hours = "0"+hours;
+				}
+				if(minutes < 10){
+					minutes = "0"+minutes;
+				}
+				var dateNow = years+"-"+month+"-"+date+" "+hours+":"+minutes;
+  				//window.location.replace("<?php echo site_url('c_create_event/view_my_transaction/'); ?>"+eID+"/"+trID);
+  				//ajax call
+  				$.ajax({
+  					method : "POST",
+  					url : '<?php echo site_url("c_create_event/save_transaction"); ?>',
+  					data : {"ticket_id" : id, "unit_price" : unit, "total_price" : tot, "number_of_items" :item, "time" : dateNow},
+  					dataType : "json",
+  					success : function(res){
+  						alert("Your transaction successufully saved, click ok to continue");
+						window.location.replace("<?php echo site_url('c_create_event/view_my_transaction/'); ?>"+eID+"/"+res[0]["transaction_id"]);
+  					},
+  					error : function(err){
+  						alert('Ups, something were wrong, please try again later');
+  					}	
+  				});
+  				//append payment method for user
+  			// 	$("#payment-method").append(''+
+  			// 	'Choose your payment method :'+
+  			// 		'<div class="radio">'+
+					//   '<label><input id="bank" type="radio" name="optradio"> <b>Electronic Money</b> : pay via credit card, bank transfer, paypall etc.</label>'+
+					// '</div>'+
+					// '<div class="radio">'+
+					//   '<label><input id="ots" type="radio" name="optradio"> <b>Pay on the spot</b> : select your ticket and pay at the venue</label>'+
+					// '</div>'
+  			// 	+'');
+  			}
+  		});
+  		//when user choose payment method
+  		$('#payment-method').click(function(){
+  			if($("#bank").prop("checked")){
+  				if($('#list-address').length == 0){
+  					$("#bank-address").load('<?php echo site_url("c_create_event/display_bank_address"); ?>');
+  				}
+  			}
+  			else{
+  				if($('#list-address').length != 0){
+  					$("#bank-address").html("");
+  				}
+  			}
+  		});
+  		// count total price
+  		var price = $("#price").val();
+  		var qty = $('#qty').val();
+  		var total = price*qty;
+  		var total = price*qty;
+		var bilangan = total;
+		var	reverse = bilangan.toString().split('').reverse().join(''),
+		ribuan 	= reverse.match(/\d{1,3}/g);
+		ribuan	= ribuan.join('.').split('').reverse().join('');
+		$("#total-price").text("Rp"+ribuan+",00");
+		$("#total").val(total);
+
+  		$("#qty").change(function(){
+  			var price = +$("#price").val();
+	  		var qty = +$('#qty').val();
+	  		var max = +$("#max-order").val();
+  			if(qty > max){
+  				alert("value must less than "+$("#max-order").val()+" or equal to "+$("#max-order").val()+"");
+  				$("#qty").val(1);
+  			}
+  			else{
+  				var total = price*qty;
+  				var bilangan = total;
+  				$("#total").val(total);
+				var	reverse = bilangan.toString().split('').reverse().join(''),
+					ribuan 	= reverse.match(/\d{1,3}/g);
+					ribuan	= ribuan.join('.').split('').reverse().join('');
+	  			$("#total-price").text("Rp"+ribuan+",00");
+  			}
+  		})
+  		//set date start and dateEnd to jquery ui calendar
+	  	var date1 = JSON.parse('<?php echo json_encode($event[0]["dateStart"]) ?>');
+	  	var date2 = JSON.parse('<?php echo json_encode($event[0]["dateEnd"]) ?>');
+		$( "#datepicker" ).datepicker({dateFormat : 'yy-mm-dd'}).datepicker("setDate", date1).datepicker({
+			beforeShowDay: function( date ) {
+	        var highlight = date1;
+	        if( highlight ) {
+	             return [true, "event", 'Tooltip text'];
+	        } else {
+	             return [true, '', ''];
+	        }
+	    }
+		});
+		$( "#datepickerEnd" ).datepicker({dateFormat : 'yy-mm-dd'}).datepicker("setDate", date2);
+  	});
+  </script>
+  <script src="<?php echo base_url(); ?>assets/js/jquery-ui.js"></script>
+
+</body>
+
+</html>

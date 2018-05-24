@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+	<!-- <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link> -->
+	<!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<title>Admin</title>
+
+	<style>
+		.table-category {
+			width: 100%;
+		}
+
+		.loading-wrapper {
+			float: center;
+			width: 50px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		#des-wrapper{
+			padding: 10px;
+		}
+
+		.loader {
+			border: 5px solid #f3f3f3;
+			/* Light grey */
+			border-top: 5px solid #3498db;
+			/* Blue */
+			border-radius: 50%;
+			width: 50px;
+			height: 50px;
+			animation: spin 2s linear infinite;
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+		/*slider*/
+		.switch {
+		  position: relative;
+		  display: inline-block;
+		  width: 40px;
+		  height: 24px;
+		}
+
+		.switch input {display:none;}
+
+		.slider {
+		  position: absolute;
+		  cursor: pointer;
+		  top: 0;
+		  left: 0;
+		  right: 0;
+		  bottom: 0;
+		  background-color: #ccc;
+		  -webkit-transition: .4s;
+		  transition: .4s;
+		}
+
+		.slider:before {
+		  position: absolute;
+		  content: "";
+		  height: 16px;
+		  width: 16px;
+		  left: 4px;
+		  bottom: 4px;
+		  background-color: white;
+		  -webkit-transition: .4s;
+		  transition: .4s;
+		}
+
+		input:checked + .slider {
+		  background-color: orange;
+		}
+
+		input:focus + .slider {
+		  box-shadow: 0 0 1px #2196F3;
+		}
+
+		input:checked + .slider:before {
+		  -webkit-transform: translateX(16px);
+		  -ms-transform: translateX(16px);
+		  transform: translateX(16px);
+		}
+
+		/* Rounded sliders */
+		.slider.round {
+		  border-radius: 34px;
+		}
+
+		.slider.round:before {
+		  border-radius: 50%;
+		}
+
+	</style>
+</head>
+
+<body>
+	<!-- nav bar on top of the page -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="#">Navbar</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+		aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link" href="#">Home
+						<span class="sr-only">(current)</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Link</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="false">
+						Dropdown
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="#">Action</a>
+						<a class="dropdown-item" href="#">Another action</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="#">Something else here</a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link disabled" href="#">Disabled</a>
+				</li>
+			</ul>
+			<form class="form-inline my-2 my-lg-0">
+				<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			</form>
+		</div>
+	</nav>
+	<div class="text-label">
+		User Event
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="show-description" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg"  role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="event-title"><span>Title</span></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body-description">
+					<!-- loader -->
+					<div class="loading-wrapper" id="loader-show">
+						<div class="loader"></div>
+					</div>
+
+					<div class="alert alert-danger" id="failled-message">
+						<strong>FAILLED!</strong> Please Try again.
+					</div>
+					<!-- event description goes here -->
+					<div id="des-wrapper">
+						
+					</div>
+
+					<!-- hidden input to store the id category -->
+					<input type="hidden" id="id-store">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+
+	<!-- print table user event -->
+	<div class="table-category" align="center">
+		<table border="1px solid" class="table table-striped" align="center" style="margin-top : 80px; width:90%;">
+			<thead id="table-head-event">
+				<th><input type="checkbox" id="check-all"></th>
+				<th>Event Id</th>
+				<th>Event Title</th>
+				<th>Event Description</th>
+				<th>Video Url</th>
+				<th>Event Type</th>
+				<th>Event Category</th>
+				<th>Ticket Available</th>
+				<th>Date Start</th>
+				<th>Date End</th>
+				<th>Time Start</th>
+				<th>Time End</th>
+				<th>Event Status</th>
+				<th>User name</th>
+				<th>Action</th>
+			</thead>
+			<tbody>
+				<?php 
+					 foreach($event as $row){
+					 	$maxChar = 50;
+					 	$des = substr($row["description"],0,$maxChar) . '...';
+					 	$desId = $row['event_id'] . '-more';
+                        $val = $row['event_id'];
+                        $status = $row["status"];
+                      
+						if($status == "offline"){
+						 	$ck = '<label class="switch">
+					    	  <input id="'.$val.'-switch" type="checkbox" onclick="switchStatus('.$val.',\'' . $status . '\')" >
+							 	  <span class="slider round"></span>
+							</label>';
+						}
+						else{
+						 	$ck = '<label class="switch">
+					    	  <input id="'.$val.'-switch" type="checkbox" onclick="switchStatus('.$val.',\'' . $status . '\')" checked>
+							 	  <span class="slider round"></span>
+							</label>';
+						}
+
+                        echo (
+                        '<tr id="'.$val.'-tr">
+                        	<td><input type="checkbox" value="'.$val.'"></td>
+                        	<td>' . $row['event_id'] .'</td>
+                            <td>' . $row['title'] . '</td>
+                            <td>' . $des . ' <button onclick="showModal('.$val.')">more</button></td>
+                            <td>' . $row['video_url'] . '</td>
+                            <td>' . $row['type'] . '</td>
+                            <td>' . $row['kategori_name'] . '</td>
+                            <td>' . $row['ticket'] . '</td>
+                            <td>' . $row['dateStart'] . '</td>
+                            <td>' . $row['dateEnd'] . '</td>
+                            <td>' . $row['timeStart'] . '</td>
+                            <td>' . $row['timeEnd'] . '</td>
+                            <td><div>' . $row['status'] . ' </div> <br> 
+                            	'.$ck.'
+							</td>
+							 <td>' . $row['name'] . '<br> 
+							<td> <button onclick="deleteEvent('.$val.')" class="btn btn-danger">Delete</button> 
+							</td>
+                        </tr>'
+                        );
+
+                    	
+                    }
+				?>
+            </tbody>
+		</table>
+	</div>
+
+	<script type="text/javascript">
+		$("#loader-show").hide();
+		$("#failled-message").hide();
+
+		function deleteEvent(id){
+			if(confirm("Are you sure want to delete this event (event id = "+id+") ?") == true){
+				$.ajax({
+					type: "POST",
+					url: "<?php echo site_url('c_my_event/delete_event'); ?>",
+					data: {
+						'id': id
+					},
+					dataType: 'json',
+					success: function (res) {
+						$("#"+id+"-tr").remove();
+					},
+					error: function (err) {
+						alert("Failled to DELETE event id = "+id+"!!");
+					}
+				});
+			}
+			else{
+
+			}
+		}
+
+		function switchStatus(id, status){
+			var stat = '';
+			if(status == "offline"){
+				stat = "online";
+			}
+			else{
+				stat = "offline";
+			}
+			if (confirm("Are You Sure want to change this avent status to "+stat) == true) {
+				$.ajax({
+					type : "POST",
+					url : "<?php echo site_url('admin/c_user_event/switch_status'); ?>",
+					data : {'stat' : stat, 'id' : id},
+					dataType : 'json',
+					success: function(res){
+						//alert(res);
+						$("#"+id+" div").text(res);
+						$("#"+id+"-switch").attr('onclick','switchStatus('+id+',"'+stat+'")');
+					},
+					error : function(err){
+						$("#"+id+"-switch").attr("checked", false);
+						alert(err);
+					} 
+				});
+			} else {
+			    txt = "You pressed Cancel!";
+			}
+		}
+
+		function showModal(id){
+			//remove description before append
+			$("#des-wrapper p").remove();
+			$("#failled-message").hide();
+
+			$.ajax({
+				type : "POST",
+				url : "<?php echo site_url('admin/c_user_event/get_event'); ?>",
+				data : {'id' : id},
+				dataType : 'json',
+				beforeSend : function(){
+					$("#loader-show").fadeIn(500);
+					$("#show-description").modal('show');
+				},
+				success: function(res){
+					var value = res[0].description.replace(/\n\r?/g,'<br>');
+					console.log(res[0].event_id);
+					$("#event-title span").text(res[0].title);
+					//$("#show-description").modal('show');
+					$("#des-wrapper").append("<p>"+value+"</p>");
+					$("#loader-show").fadeOut(500);
+				},
+				error : function(err){
+					$("#failled-message").fadeIn(500);
+					$("#loader-show").fadeOut(500);
+					
+				} 
+			});
+		}
+	</script>
+
+</body>
+
+</html>

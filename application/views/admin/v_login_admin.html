@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link>
+	<title>Login</title>
+    <style>
+   		.bar-image-admin{
+   			height: 240px;
+			width: 420PX;
+		    background-color: #ffff;
+		    box-shadow: 5px 5px 14px black;
+		    padding: 10px;
+		    text-align: center;
+		    color: white;
+		    margin : auto;
+		    margin-top: 10%;
+   		}
+   		body{
+   			background-color: #1A9AC4;
+   		}
+	</style>
+</head>
+<body >
+	
+		<div class="bar-image-admin">
+			<div class="konten">
+				<div class="artikel">
+					<div class="label-text">Admin Signin</div>
+					
+						<div class="grup">
+							<label for="email">E-mail Address</label>
+							<input type="text" placeholder="Enter your e-mail" name="username" id="username-admin">
+						</div>
+						<div class="grup">
+							<label for="password">Password</label>
+							<input type="password" name="pass" placeholder="Enter Your Password" id="password-admin">
+						</div>
+	
+						<div class="grup">
+							<input type="submit" value="LogIn" id="login-admin">
+						</div>
+				
+				</div>
+			</div>
+	
+		</div>
+	</div>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#login-admin").click(function(){
+				var username = $("#username-admin").val();
+				var pass = $("#password-admin").val();
+				if(username && pass){
+					$.ajax({
+						type : "POST",
+						url : "<?php echo site_url('admin/c_login_admin/admin_login'); ?>",
+						data : {'username' : username, 'pass' : pass},
+						dataType : 'json',
+						success : function(res){
+							if(res == "ok"){
+								window.location.replace("<?php echo site_url('admin/c_admin_dashboard'); ?>");
+							}
+							else{
+								alert("Incorect Email or Password");
+							}
+						},
+						error : function(err){
+							alert("An Error occured");
+						}
+					});
+				}
+				else{
+					alert("Make sure all field is not empty!");
+				}
+			});
+		});
+	</script>
+
+</body>
+</html>

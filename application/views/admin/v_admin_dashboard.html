@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>inmap | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+  <script src='<?php echo base_url(); ?>assets/js/jquery-ui-1.10.0.custom.min.js'></script>
+  <!--styles -->
+  <link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>assets/css/jquery-ui.css" rel="stylesheet">
+  <link type="text/css" href="<?php echo base_url(); ?>assets/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <!-- link fontawesome css from CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
+  <style type="text/css">
+    .button-text{
+      color: white;
+    }
+    .wrapper{
+        width: 90%;
+        overflow: auto;
+        background-color: white;
+        box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2%;
+        margin-bottom: auto;
+    }
+
+    .stats-wrapper{
+        background-color: white;
+        box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+        margin-top: 2%;
+        margin-bottom: auto;
+        height: 100px; 
+        width: 20%; 
+        min-width: 200px; 
+        float: left; 
+        margin-left: 4%;
+    }
+    @media screen and (max-width:490px){
+      .stats-wrapper{
+          width: 94%;
+      }
+    }
+  </style>
+</head>
+<body style="background-color: #F1F1F1;">
+
+<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px; background-color: #222d32;" id="mySidebar">
+  <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+  <div style="width: 100%; height: 100px;"></div>
+  <div style="background-color: #1a2226; color: gray; height: 40px; vertical-align: middle; text-align: center; padding-top: 10px;">navigation</div>
+   <a href="<?php echo site_url('admin/c_admin_dashboard'); ?>" class="w3-bar-item w3-button button-text">Dashboard</a>
+  <a href="<?php echo site_url('admin/c_event_category'); ?>" class="w3-bar-item w3-button button-text">Event category</a>
+  <a href="<?php echo site_url('admin/c_user_event'); ?>" class="w3-bar-item w3-button button-text">User event</a>
+  <a href="<?php echo site_url('admin/c_user'); ?>" class="w3-bar-item w3-button button-text">Users</a>
+  <a href="<?php echo site_url('admin/c_admin_dashboard/success_transaction'); ?>" class="w3-bar-item w3-button button-text">Success Transaction</a>
+</div>
+
+<div class="w3-main" style="margin-left:200px;">
+<div class="w3-teal">
+  <button class="w3-button w3-teal w3-xlarge w3-hide-large" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>Dashboard</h1>
+  </div>
+</div>
+<!-- content -->
+<div class="w3-container">
+  <div style="height: 120px;">
+    <!-- LIKES -->
+    <!-- <div class="stats-wrapper">
+      <table border="0px solid black">
+        <tr>
+          <td rowspan="2" style="height: 100px; width: 100px;">
+            <div style="height: 100px; width: 100px; background-color: #DD2E44; display: table-cell; vertical-align: middle; text-align: center;">
+              <i id="heart-solid" class="fas fa-heart" style="font-size:40px;color:white;"></i>
+            </div>
+          </td>
+          <td style="width:60%; padding-left: 10px;">
+            LIKES <br>
+            <b>
+             20
+            </b>
+          </td>
+        </tr>
+      </table>
+    </div>
+    COMMENTS
+    <div class="stats-wrapper">
+      <table border="0px solid black">
+        <tr>
+          <td rowspan="2" style="height: 100px; width: 100px;">
+            <div style="height: 100px; width: 100px; background-color: #00c0ef; display: table-cell; vertical-align: middle; text-align: center;">
+              <i id="heart-solid" class="fas fa-comments" style="font-size:40px;color:white;"></i>
+            </div>
+          </td>
+          <td style="width:60%; padding-left: 10px;">
+            COMMENTS <br>
+            <b>
+            34
+            </b>
+          </td>
+        </tr>
+      </table>
+    </div> -->
+    <!-- TICKET SELL -->
+    <div class="stats-wrapper">
+      <table border="0px solid black">
+        <tr>
+          <td rowspan="2" style="height: 100px; width: 100px;">
+            <div style="height: 100px; width: 100px; background-color: #F39C12; display: table-cell; vertical-align: middle; text-align: center;">
+              <i id="heart-solid" class="fas fa-ticket-alt" style="font-size:40px;color:white;"></i>
+            </div>
+          </td>
+          <td style="width:60%; padding-left: 10px;">
+           <?php
+              if(count($total_req) > 0){
+                echo '
+                  TOTAL REQUEST<br>
+                  <b>'.$total_req[0]["tot_request"].'</b>
+                ';
+              }
+              else{
+                echo "d";
+              }
+           ?>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+   <!--  <div class="stats-wrapper">
+      <table border="0px solid black">
+        <tr>
+          <td rowspan="2" style="height: 100px; width: 100px;">
+            <div style="height: 100px; width: 100px; background-color: #00A65A; display: table-cell; vertical-align: middle; text-align: center;">
+              <i id="heart-solid" class="fas fa-eye" style="font-size:40px;color:white;"></i>
+            </div>
+          </td>
+          <td style="width:60%; padding-left: 10px;">
+           as
+          </td>
+        </tr>
+      </table>
+    </div> -->
+  </div>
+
+  <div class="wrapper">
+    <table class="table table-hover" style="font-size: 10pt;">
+      <thead>
+        <th>No.</th>
+        <th>Ticket Id</th>
+        <th>Ticket Title</th>
+        <th>Confirmation request</th>
+        <th>Action</th>
+      </thead>
+      <tbody>
+        <?php
+          $i = 0;
+          foreach($request as $row){
+            $i++;
+            echo '
+              <tr>
+            ';
+            echo '
+              <td>'.$i.'</td>
+              <td>'.$row["ticket_id"].'</td>
+              <td>'.$row["ticket_title"].'</td>
+              <td>'.$row["tot_request"].' request</td>
+              <td>
+                <button onclick="view_ticket('.$row["ticket_id"].')" class="btn btn-success" style="border-radius: 0px;">view</button>
+              </td>
+            ';
+            echo '
+              </tr>
+            ';
+          }
+        ?>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- content end -->
+   
+</div>
+  
+<!-- 
+  query = SELECT ticket_id, transaction_id, COUNT(ticket_id) as tot_request FROM transaction WHERE transaction.status = "wait_for_confirmation" GROUP BY ticket_id
+ -->
+ <!-- bootstrap js file -->
+  <script src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+
+<script>
+  function view_ticket(id){
+    document.location.href = "<?php echo site_url('admin/c_admin_dashboard/confirm_ticket_view/'); ?>"+id;
+  }
+
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+     
+</body>
+</html>

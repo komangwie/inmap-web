@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link>
+	<!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<!-- link fontawesome css from CDN -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
+	<title>In Map : get url</title>
+	<style type="text/css">
+		body{
+		background-color: #F1F1F1;
+		margin: 0;
+		padding: 0;
+	}
+	.wrapper{
+	    width: 80%;
+	    background-color: white;
+	    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+	    margin-left: auto;
+	    margin-right: auto;
+	    margin-top: 2px;
+	    padding: 10px 10px 10px 10px;
+	}
+	input{
+		background-color: #F1F1F1;
+		height: 40px;
+		border: 1px solid blue;
+		border-radius: 0px;
+		width: 100%;
+	}
+	.photo{
+		height: 50px;
+		width: 50px;
+		background-color: grey;
+		border-radius: 25px;
+	}
+	.name{
+		text-align: center;
+		width: 40%;
+		height: 50px;
+		background-color: red;
+		position: relative;
+		margin-top: -50px;
+		margin-left: 60px;
+		
+	}
+	.email{
+		text-align: center;
+		width: 40%;
+		height: 50px;
+		background-color: blue;
+		position: relative;
+		margin-top: -50px;
+		margin-left: 52%;
+	}
+	.add{
+		width: 8%;
+		height: 50px;
+		background-color: yellow;
+		position: relative;
+		margin-top: -50px;
+		margin-left: 92%;
+	}
+	/*slider*/
+		.switch {
+		  position: relative;
+		  display: inline-block;
+		  width: 40px;
+		  height: 24px;
+		}
+
+		.switch input {display:none;}
+
+		.slider {
+		  position: absolute;
+		  cursor: pointer;
+		  top: 0;
+		  left: 0;
+		  right: 0;
+		  bottom: 0;
+		  background-color: #ccc;
+		  -webkit-transition: .4s;
+		  transition: .4s;
+		}
+
+		.slider:before {
+		  position: absolute;
+		  content: "";
+		  height: 16px;
+		  width: 16px;
+		  left: 4px;
+		  bottom: 4px;
+		  background-color: white;
+		  -webkit-transition: .4s;
+		  transition: .4s;
+		}
+
+		input:checked + .slider {
+		  background-color: orange;
+		}
+
+		input:focus + .slider {
+		  box-shadow: 0 0 1px #2196F3;
+		}
+
+		input:checked + .slider:before {
+		  -webkit-transform: translateX(16px);
+		  -ms-transform: translateX(16px);
+		  transform: translateX(16px);
+		}
+
+		/* Rounded sliders */
+		.slider.round {
+		  border-radius: 34px;
+		}
+
+		.slider.round:before {
+		  border-radius: 50%;
+		}
+		.menu-dot{
+			text-align : left; 
+			width : 100%; 
+			color: gray;
+		}
+		.menu-dot:hover{
+			background-color: rgba(255,255,180,0.8);
+			cursor: pointer;
+		}
+		.menu-btn{
+			font-size : 20pt;
+		}
+		.menu-btn:hover{
+			cursor: pointer;
+			color: gray;
+		}
+	@media screen and (max-width:600px){
+			.wrapper{
+			    width: 100%;
+			    background-color: white;
+			    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+			    margin-left: auto;
+			    margin-right: auto;
+			    margin-top: 2px;
+			    padding: 10px 10px 10px 10px;
+			}
+			.email-user{
+				display: none;
+			}
+		}
+	
+	</style>
+</head>
+
+<body>
+	<ul>
+		<li>
+			<a class="activ" href="#Home">Home</a>
+		</li>
+		<li>
+			<a class="activ" href="#Notif">Notification</a>
+		</li>
+		<li>
+			<a class="activ" href="#c_event" id="btn-create-event">Create Event</a>
+		</li>
+	</ul>
+	<div class="btn-grup">
+		<button class="logo-button"></button>
+		<div class="dropdown-content">
+			<a href="#">Profil</a>
+			<a href="#" id="my-event">My Event</a>
+			<a href="#">Log out</a>
+		</div>
+	</div>
+	<div class="wrapper">a</div>
+	<script type="text/javascript">
+		
+	</script>
+</body>
+
+</html>

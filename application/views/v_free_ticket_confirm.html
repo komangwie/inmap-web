@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>Transaction</title>
+
+	<script src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<script src='<?php echo base_url(); ?>assets/js/jquery-ui-1.10.0.custom.min.js'></script>
+	<!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="<?php echo base_url(); ?>assets/css/jquery-ui.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo base_url(); ?>assets/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+	<!-- link fontawesome css from CDN -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link>
+	<!-- Link Swiper's CSS -->
+	<link rel="stylesheet" href="<?php echo base_url(); ?>swiper-4.1.6/dist/css/swiper.css"></link>
+
+	<style type="text/css">
+		.body{
+		background-color: #F1F1F1;
+		margin: 0;
+		padding: 0;
+		height: 100%;
+		width: 100%;
+		}
+		.input{
+			background-color: #F1F1F1 !important;
+			height: 40px;
+			border-radius: 0px !important;
+			width: 40%;
+		}
+		.wrapper{
+		    width: 60%;
+		    overflow: auto;
+		    background-color: white;
+		    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+		    margin-left: auto;
+		    margin-right: auto;
+		    margin-top: 2%;
+		    margin-bottom: auto;
+		}
+	</style>
+</head>
+
+<body class="body">
+	<div id="header"></div>
+	<div style="overflow: auto;">
+		<div class="wrapper" style="float: left; margin-left: 15%;">
+			<div style="width: 50%; margin-left: auto; margin-right: auto;">
+				<img src="<?php echo base_url();?>assets/img/adsense.png" style="width: 100%; height: auto;">
+			</div>
+			<table style="width : 100%; text-align: center;">
+				<tr>
+					<?php
+						echo '
+						<td style="padding-top: 10px;">
+							<button class="btn btn-danger" onclick="confirm_free('.$tr_id.')"  style="border-radius : 20px; width : 350px; background-color: #FC0F69;">Continue to confirmation</button>
+							<input type="hidden" value="'.$event_id.'" id="event-id">
+						</td>
+						';
+					?>
+			</tr>
+			</table>
+			<div style="height: 50px;"></div>
+		</div>
+		<div style="float: left; width: 20%; margin-left: 2%;margin-top: 30px;">
+			<div class="wrapper" style="width: 100%;" >
+				<div style="width: 50%; margin-left: auto; margin-right: auto;">
+					<img src="<?php echo base_url();?>assets/img/adsense.png" style="width: 100%; height: auto;">
+				</div>
+			</div>
+			<div class="wrapper" style="width: 100%;" >
+				<div style="width: 50%; margin-left: auto; margin-right: auto;">
+					<img src="<?php echo base_url();?>assets/img/adsense.png" style="width: 100%; height: auto;">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="height: 50px;"></div>
+	<!-- footer -->
+	<div id="footer" style="margin-top: 40px;">
+
+	</div>
+
+	<!-- bootstrap js file -->
+	<script src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+ <script>
+ 	//load header and footer
+  	$("#header").load('<?php echo site_url("c_create_event/header_load"); ?>');
+	$("#footer").load('<?php echo site_url("c_create_event/footer_load"); ?>');
+
+	function confirm_free(id){
+		//get date time
+		var time = new Date();
+		var date = time.getDate();
+		var month = time.getMonth()+1;
+		var years = time.getFullYear();
+		var hours = time.getHours();
+		var minutes = time.getMinutes();
+
+		if(date < 10){
+			date = "0"+date; 
+		}
+		if(month < 10){
+		 	month = "0"+month;
+		}
+		if(hours < 10){
+			hours = "0"+hours;
+		}
+		if(minutes < 10){
+			minutes = "0"+minutes;
+		}
+		var dateNow = years+"-"+month+"-"+date+" "+hours+":"+minutes;
+		$.ajax({
+			method : "POST",
+			url : '<?php echo site_url("c_create_event/free_ticket_save_transaction"); ?>',
+			data : {"id" : id, "time" : dateNow},
+			dataType : "json",
+			success : function(res){
+				alert("your transaction is successful, Now you can go to the venue at the time\nClick ok to continue");
+				var eId = $("#event-id").val();
+				window.location.replace( "<?php echo site_url('c_create_event/view_my_transaction/')?>"+eId+"/"+id);
+			},
+			error : function(err){
+
+			}
+		});
+	}
+  </script>
+  <script src="<?php echo base_url(); ?>assets/js/jquery-ui.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>inmap | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+  <script src='<?php echo base_url(); ?>assets/js/jquery-ui-1.10.0.custom.min.js'></script>
+  <!--styles -->
+  <link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>assets/css/jquery-ui.css" rel="stylesheet">
+  <link type="text/css" href="<?php echo base_url(); ?>assets/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <!-- link fontawesome css from CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
+  <style type="text/css">
+    .button-text{
+      color: white;
+    }
+    .wrapper{
+        width: 90%;
+        overflow: auto;
+        background-color: white;
+        box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2%;
+        margin-bottom: auto;
+    }
+
+    .stats-wrapper{
+        background-color: white;
+        box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+        margin-top: 2%;
+        margin-bottom: auto;
+        height: 100px; 
+        width: 20%; 
+        min-width: 200px; 
+        float: left; 
+        margin-left: 4%;
+    }
+    @media screen and (max-width:490px){
+      .stats-wrapper{
+          width: 94%;
+      }
+    }
+  </style>
+</head>
+<body style="background-color: #F1F1F1;">
+
+<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px; background-color: #222d32;" id="mySidebar">
+  <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+  <div style="width: 100%; height: 100px;"></div>
+  <div style="background-color: #1a2226; color: gray; height: 40px; vertical-align: middle; text-align: center; padding-top: 10px;">navigation</div>
+   <a href="<?php echo site_url('admin/c_admin_dashboard'); ?>" class="w3-bar-item w3-button button-text">Dashboard</a>
+  <a href="<?php echo site_url('admin/c_event_category'); ?>" class="w3-bar-item w3-button button-text">Event category</a>
+  <a href="<?php echo site_url('admin/c_user_event'); ?>" class="w3-bar-item w3-button button-text">User event</a>
+  <a href="<?php echo site_url('admin/c_user'); ?>" class="w3-bar-item w3-button button-text">Users</a>
+  <a href="<?php echo site_url('admin/c_user'); ?>" class="w3-bar-item w3-button button-text">Confirmation</a>
+</div>
+
+<div class="w3-main" style="margin-left:200px;">
+<div class="w3-teal">
+  <button class="w3-button w3-teal w3-xlarge w3-hide-large" onclick="w3_open()">&#9776;</button>
+  <div class="w3-container">
+    <h1>Confirm Ticket</h1>
+  </div>
+</div>
+<!-- content -->
+<div class="w3-container">
+  <div style="height: 20px;"></div>
+     <div class="alert alert-success" id="warning-success">
+       <strong>Confirm complete!</strong>
+    </div>
+  <div class="wrapper">
+    <table class="table table-hover" style="font-size: 10pt;">
+      <thead>
+        <th>No.</th>
+        <th>Username</th>
+        <th>Number of items</th>
+        <th>Total price</th>
+        <th>Transaction time</th>
+        <th>Check</th>
+      </thead>
+      <tbody>
+        <?php
+            $i = 0;
+            foreach($transaction as $row){
+              $i++;
+              echo '
+              <tr id="tr-'.$row["transaction_id"].'">
+                <td>'.$i.' <input type="hidden" id="tr_id-'.$row["transaction_id"].'" value="'.$row["transaction_id"].'">
+                <input type="hidden" id="user_id-'.$row["transaction_id"].'" value="'.$row["user_id"].'">
+                </td>  
+                <td>'.$row["name"].' <input type="hidden" id="name-'.$row["transaction_id"].'" value="'.$row["name"].'" name=""></td>
+                <td>'.$row["number_of_items"].' <input type="hidden" id="noi-'.$row["transaction_id"].'" value="'.$row["number_of_items"].'" name=""></td>
+                <td>'.$row["total_price"].'
+                  <input type="hidden" id="tot_price-'.$row["transaction_id"].'" value="'.$row["total_price"].'" name=""></td>
+                <td>'.$row["transaction_time"].'
+                  <input type="hidden" id="time-'.$row["transaction_id"].'" value="'.$row["transaction_time"].'" name=""></td>
+                <td>
+                  <button onclick="show_modal('.$row["transaction_id"].')" class="btn btn-success" style="border-radius: 0px;">process</button>
+                  <input type="hidden" id="path-'.$row["transaction_id"].'" value="'.$row["img_confirmation"].'" name="">
+                </td>
+              </tr>';
+            }
+        ?>
+      </tbody>
+    </table>
+  </div>
+  <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Confirm transaction</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- loader -->
+              <div class="loading-wrapper" id="loader-add-category">
+                <div class="loader"></div>
+              </div>
+
+              <div class="alert alert-warning" id="warning-message">
+                <strong>Warning!</strong> Please Insert All Field.
+              </div>
+
+              <div class="alert alert-danger" id="failled-message">
+                <strong>FAILLED!</strong> Please Try again.
+              </div>
+              <!-- transfer image -->
+              <div style="width: 20%; margin-left: auto; margin-right: auto;">
+                <img src="" style="width: 100%; height: auto;" id="transaction-image">
+             </div>
+             <table style="margin-top: 2%;">
+                <tr>
+                 <td>Transaction id</td>
+                 <td>:</td>
+                 <td><div id="tr_id"></div></td>
+               </tr>
+                <tr>
+                 <td>User Id</td>
+                 <td>:</td>
+                 <td><div id="user_id"></div></td>
+               </tr>
+               <tr>
+                 <td>Username</td>
+                 <td>:</td>
+                 <td><div id="name"></div></td>
+               </tr>
+                <tr>
+                 <td>Number of items</td>
+                 <td>:</td>
+                 <td><div id="noi"></div></td>
+               </tr>
+               <tr>
+                 <td>Total price</td>
+                 <td>:</td>
+                 <td><div id="tot_price"></div></td>
+               </tr>
+                <tr>
+                 <td>Transaction Time</td>
+                 <td>:</td>
+                 <td><div id="trans_time"></div></td>
+               </tr>
+             </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" id="reject-btn">Reject</button>
+              <button type="button" class="btn btn-primary" id="confirm-button">Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+<!-- content end -->
+   
+</div>
+  
+<!-- 
+  query = SELECT ticket_id, transaction_id, COUNT(ticket_id) as tot_request FROM transaction WHERE transaction.status = "wait_for_confirmation" GROUP BY ticket_id
+ -->
+ <!-- bootstrap js file -->
+  <script src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+
+<script>
+  $("#warning-message").hide();
+  $("#failled-message").hide();
+  $("#warning-success").hide();
+  function show_modal(id){
+    var src = '<?php echo base_url(); ?>' + $("#path-"+id).val();
+    var name = $("#name-"+id).val();
+    var noi = $("#noi-"+id).val();
+    var tot = $("#tot_price-"+id).val();
+    var time = $("#time-"+id).val();
+    var tr_id = $("#tr_id-"+id).val();
+    var user_id = $("#user_id-"+id).val();
+    $("#transaction-image").attr("src", src);
+    $("#name").text(name);
+    $("#noi").text(noi);
+    $("#tot_price").text(tot);
+    $("#trans_time").text(time);
+    $("#tr_id").text(tr_id);
+    $("#user_id").text(user_id);
+    $("#exampleModal").modal("show");
+  }
+
+  $("#reject-btn").click(function(){
+    var id = $("#tr_id").text();
+    //get date time
+    var time = new Date();
+    var date = time.getDate();
+    var month = time.getMonth()+1;
+    var years = time.getFullYear();
+    var hours = time.getHours();
+    var minutes = time.getMinutes();
+
+    if(date < 10){
+      date = "0"+date; 
+    }
+    if(month < 10){
+      month = "0"+month;
+    }
+    if(hours < 10){
+      hours = "0"+hours;
+    }
+    if(minutes < 10){
+      minutes = "0"+minutes;
+    }
+    var dateNow = years+"-"+month+"-"+date+" "+hours+":"+minutes;
+    $.ajax({
+        method : "post",
+        url : "<?php echo site_url('admin/c_admin_dashboard/reject_transaction'); ?>",
+        data : {"id" : id, "time" : dateNow},
+        dataType : 'json',
+        success : function(res){
+          // $("#warning-success").fadeIn(500);
+          $("#tr-"+id).remove();
+          $("#exampleModal").modal("hide");
+        },
+        error : function (err){
+          alert("Ups something were wrong, please try again latter");
+        }
+      });
+  });
+
+  $("#confirm-button").click(function(){
+    if(confirm("Confirm this transaction ?") == true){
+      var id = $("#tr_id").text();
+      var user_id = $("#user_id").text();
+      //get date time
+      var time = new Date();
+      var date = time.getDate();
+      var month = time.getMonth()+1;
+      var years = time.getFullYear();
+      var hours = time.getHours();
+      var minutes = time.getMinutes();
+
+      if(date < 10){
+        date = "0"+date; 
+      }
+      if(month < 10){
+        month = "0"+month;
+      }
+      if(hours < 10){
+        hours = "0"+hours;
+      }
+      if(minutes < 10){
+        minutes = "0"+minutes;
+      }
+      var dateNow = years+"-"+month+"-"+date+" "+hours+":"+minutes;
+
+      $.ajax({
+        method : "post",
+        url : "<?php echo site_url('admin/c_admin_dashboard/confirm_transaction'); ?>",
+        data : {"id" : id, "user_id" : user_id, "time" : dateNow},
+        dataType : 'json',
+        success : function(res){
+          $("#warning-success").fadeIn(500);
+          $("#tr-"+id).remove();
+          $("#exampleModal").modal("hide");
+        },
+        error : function (err){
+          alert("Ups something were wrong, please try again latter");
+        }
+      });
+    }
+  });
+
+  function view_ticket(id){
+    alert(id);
+  }
+
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+}
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+     
+</body>
+</html>

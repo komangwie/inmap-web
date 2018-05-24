@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sign Up</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <script type="text/javascript" src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+  <script src='<?php echo base_url(); ?>assets/js/jquery-ui-1.10.0.custom.min.js'></script>
+  <!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo base_url(); ?>assets/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link>
+  <!-- Link Swiper's CSS -->
+  <link rel="stylesheet" href="<?php echo base_url(); ?>swiper-4.1.6/dist/css/swiper.min.css">
+</head>
+<body  class="background-body">
+    <h1 style="margin-top:0px;font-family: Good;font-style: italic; font-size: 50px; color: #ffff; text-align: center; text-shadow: 3px 2px orange";>Create your account</h1>
+    <div class="indent">
+          <div class="konten">
+            <div class="artikel">
+              <form action="#" method="post">
+                <div class="grup">
+                  <label for="email">Username</label>
+                  <input type="text" placeholder="Enter your name" id="username">
+                </div>
+                <div class="grup">
+                  <label for="password">Email-Address</label>
+                  <input type="mail" placeholder="Enter your active email address" id="email">
+                </div>
+        
+                <div class="grup">
+                  <label for="phone">Phone Number</label>
+                  <input type="text" placeholder="Enter your valid phone number" id="phone">
+                </div>
+                <div class="grup">
+                    <label for="gender">Gender</label>
+                    <label class="container">Male
+                      <input type="radio" checked="checked" name="radio" id="male">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="container">Female
+                      <input type="radio" name="radio" id="female">
+                      <span class="checkmark"></span>
+                    </label>
+                </div>
+               
+                <div class="grup">
+                    <label for="birthday">Birthday</label>
+                    <input type="text" id="bday" placeholder="yyyy-mm-dd">
+                </div>
+                <div class="grup">
+                  <label for="password">Password</label>
+                  <input type="password" placeholder="Choose your password" id="password">
+                </div>
+                <div class="grup">
+                  <label for="re-password">Re-Password</label>
+                  <input type="password" placeholder="re-password" id="rePassword">
+                </div>
+        
+                <div class="grup">
+                  <input type="submit" value="SignUp" id="signup">
+                </div>
+                <div style="height:3px;"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+        </div>
+    <!-- <div class="form" align="center">
+    <?php echo $map['html']; ?>
+    <input class="inputBox" type="text" name="username" id="username" placeholder="name"><br>
+    <input class="inputBox" type="email" name="username" id="username" placeholder="email"><br>
+    <input class="inputBox" type="tel" name="username" id="username" placeholder="phone number"><br>
+    <input class="inputBox" type="date" name="username" id="username" placeholder="name"><br>
+    <p>Gender : </p>
+    <form>
+      <input type="radio" name="gender" value="male" checked> Male<br>
+      <input type="radio" name="gender" value="female"> Female<br>
+    </form>
+    <input class="inputBox" type="password" name="username" id="username" placeholder="Password"><br>
+    <button class="button" id="login">Signup</button><br> -->
+  </div>
+  <script>
+      $(document).ready(function(){
+        $("#signup").click(function(){
+            var username = $("#username").val();
+            var email = $("#email").val();
+            var phone =$("#phone").val();
+            var gender;
+            if($("#male").prop("checked")){
+                gender = "male";
+            }
+            else{
+              gender = "female";
+            }
+           
+            var bday = $("#bday").val();
+            var password = $("#password").val();
+            var rePassword = $("#rePassword").val();
+           // alert(bday);
+           
+            if(username == null || username == '' || email == null || email =='' || phone == null || phone == ''|| bday == null || bday == ''|| password == null || password == '' || rePassword==null || rePassword == ''){
+                alert("Make sure all field is not empty");
+            }
+            else{
+              if(username.length < 5){
+                alert("Your username less than 5 character");
+              }
+              else{
+                if(email.includes("@") && email.includes(".")){
+                  if(phone * 0 == 0){
+                    if(password.length < 6){
+                      alert("Password less than 6 Character");
+                    }
+                    else{
+                      if(password != rePassword){
+                        alert("Wrong Password");
+                      }
+                      else{
+                        //ajax here
+                        $.ajax({
+                        type : "POST",
+                        url : "<?php echo site_url('c_signup/signup_proses'); ?>",
+                        data : {
+                         "username" : username,
+                         "email" : email,
+                         "phone" : phone,
+                         "gender" : gender,
+                         "bday" : bday,
+                        "password" : password,
+                        },
+                        dataType : "json",
+                        success : function(data){
+                          window.location.replace("<?php echo site_url('c_dashboard'); ?>");
+                        },
+                        error : function(data){
+                          alert("gagal");
+                            console.log("gagal");
+                        }
+                      });
+                      }
+                    }
+                  }
+                  else{
+                    alert("Wrong Number Format");
+                  }
+                }
+                else{
+                  alert("Wrong Format email");
+                }
+              }
+            }
+        });
+        
+
+          // birthday input
+        $( "#bday" ).datepicker({
+            defaultDate: "+1w",
+            changeMonth: true,
+            changeYear : true,
+            numberOfMonths: 1,
+            dateFormat: 'yy-mm-dd',
+            onClose: function( selectedDate ) {
+                $( "#bday" ).datepicker("option", "minDate", selectedDate );
+            }
+        });
+      });
+  </script>
+</body>
+</html>

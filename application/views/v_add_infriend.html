@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Infriend</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>Add infriend</title>
+
+	<script src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<script src='<?php echo base_url(); ?>assets/js/jquery-ui-1.10.0.custom.min.js'></script>
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+	<!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo base_url(); ?>assets/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+	<!-- link fontawesome css from CDN -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link>
+	<style type="text/css">
+		body{
+		background-color: #F1F1F1;
+		margin: 0;
+		padding: 0;
+	}
+	.wrapper{
+	    width: 60%;
+	    background-color: white;
+	    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+	    margin-left: auto;
+	    margin-right: auto;
+	    margin-top: 2px;
+	    padding: 10px 10px 10px 10px;
+	}
+	input{
+		background-color: #F1F1F1;
+		height: 40px;
+		border: 1px solid black;
+		border-radius: 0px;
+		width: 100%;
+	}
+	.photo{
+		height: 50px;
+		width: 50px;
+		background-color: grey;
+		border-radius: 25px;
+	}
+	.name{
+		text-align: center;
+		width: 40%;
+		height: 50px;
+		background-color: red;
+		position: relative;
+		margin-top: -50px;
+		margin-left: 60px;
+		
+	}
+	.email{
+		text-align: center;
+		width: 40%;
+		height: 50px;
+		background-color: blue;
+		position: relative;
+		margin-top: -50px;
+		margin-left: 52%;
+	}
+	.add{
+		width: 8%;
+		height: 50px;
+		background-color: yellow;
+		position: relative;
+		margin-top: -50px;
+		margin-left: 92%;
+	}
+	@media screen and (max-width:600px){
+			.wrapper{
+			    width: 100%;
+			    background-color: white;
+			    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+			    margin-left: auto;
+			    margin-right: auto;
+			    margin-top: 2px;
+			    padding: 10px 10px 10px 10px;
+			}
+			.email-user{
+				display: none;
+			}
+		}
+	
+	</style>
+</head>
+<body>
+	<div id="header"></div>
+	<div style="height: 50px;"></div>
+	<div class="wrapper">
+		<table border="0px solid black" style="width: 100%;">
+			<tr>
+				<td style="width: 100%;"><input type="text" id="search" placeholder="Type the name here"  name=""></td>
+				<td><button class="btn btn-primary" id="btn-search">search</button></td>
+			</tr>
+		</table>
+	</div>
+	<div style="height: 20px;"></div>
+	<!-- list of image -->
+	<div id="list">
+		
+	</div>
+	<div style="height: 200px;"></div>
+	<!-- footer -->
+		<div id="footer" style="margin-top: 40px;">
+
+		</div>
+
+	<script type="text/javascript">
+		$("#header").load('<?php echo site_url("c_create_event/header_load"); ?>');
+		$("#footer").load('<?php echo site_url("c_create_event/footer_load"); ?>');
+		$("#goto-add-infriend").click(function(){
+			document.location.href = "<?php echo site_url('c_add_infriend');?>";
+		});
+		function get_friend(){
+			$(".list-all").remove();
+			var s = $("#search").val();
+			$.ajax({
+				method : "POST",
+				url :  "<?php echo site_url('c_add_infriend/search_friend'); ?>",
+				data : {"text" : s},
+				dataType : 'json',
+				success : function(res){
+					if(res.length == 0){
+						var empty = '<div class="list-all"> <div class="wrapper" ><table border="0px solid black" style="width: 100%;"><tr><td><div class="alert alert-danger" id="failled-message"><strong>Not Found!</strong> Please Try again</div></td></tr></table></div> </div>';
+						$("#list").append(empty	);
+					}
+					else{
+						//alert(res.length);
+						for(var i = 0; i< res.length; i++){
+							if($("#"+res[i].user_id).length != 0){
+
+							}
+							else{
+								var base ="";
+								if(res[i].url == null){
+									base = "<?php echo base_url();?>/assets/img/user.png";
+								}
+								else{
+									base = "<?php echo base_url();?>" +res[i].url;
+								}
+								
+								
+								var l = '<div class="list-all"> <div class="wrapper" id="'+res[i].user_id+'"><table border="0pxx solid black" style="width: 100%;"><tr><td style="width:55px;"><div class="photo"><img src="'+base+'" style="width:50px; height: 50px;" ></div></td><td style="width:40%;"><div>'+ res[i].name +'</div></td><td class="email-user" style="width:40%;"><div >'+res[i].email+'</div></td><td style="text-align:right;"><div><button class="btn btn-primary" onclick="addFriend('+res[i].user_id+')">+</button></div></td></tr></table></div> </div>';
+								$("#list").append(l);
+							}
+						}
+					}
+					
+					console.log(res);
+				},
+				error : function(err){
+
+				}
+			});
+		}
+		$("#search").change(function(){
+			get_friend();
+		});
+		$("#btn-search").click(function(){
+			get_friend();
+		});
+		function addFriend(id){
+			$.ajax({
+				method : "POST",
+				url :  "<?php echo site_url('c_add_infriend/add_friend'); ?>",
+				data : {"id" : id},
+				dataType : 'json',
+				success : function(res){
+					alert(res);
+				},
+				error : function(err){
+					console.log(err);
+					alert('error occured when add friend');
+				}
+			});
+		}
+	</script>
+</body>
+</html>

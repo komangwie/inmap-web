@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>inmap | event stats</title>
+
+	<script src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<script src='<?php echo base_url(); ?>assets/js/jquery-ui-1.10.0.custom.min.js'></script>
+	<!--styles -->
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="<?php echo base_url(); ?>assets/css/jquery-ui.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo base_url(); ?>assets/css/jquery-ui-1.10.0.custom.css" rel="stylesheet" />
+	<!-- link fontawesome css from CDN -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link>
+	<!-- Link Swiper's CSS -->
+	<link rel="stylesheet" href="<?php echo base_url(); ?>swiper-4.1.6/dist/css/swiper.css"></link>
+
+	<style type="text/css">
+		.body{
+		background-color: #F1F1F1;
+		margin: 0;
+		padding: 0;
+		height: 100%;
+		width: 100%;
+	}
+	.wrapper{
+	    width: 60%;
+	    overflow: auto;
+	    background-color: white;
+	    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+	    margin-left: auto;
+	    margin-right: auto;
+	    margin-top: 2%;
+	    margin-bottom: auto;
+	}
+	.stats-wrapper{
+	    background-color: white;
+	    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+	    margin-top: 2%;
+	    margin-bottom: auto;
+	    height: 100px; 
+	    width: 20%; 
+	    min-width: 200px; 
+	    float: left; 
+	    margin-left: 4%;
+	}
+	@media screen and (max-width:490px){
+		.stats-wrapper{
+	 		  width: 94%;
+		}
+	}
+	</style>
+</head>
+
+<body class="body">
+	<div id="header"></div>
+	<!-- save id into a input to permanetn store, free access -->
+	<?php
+		echo '
+		<input type="hidden" id="event-id" value="'.$event[0]["event_id"].'">
+		';
+		if(isset($ticket)){
+			echo '<input type="hidden" id="ticket_id" value="'.$ticket[0]["ticket_id"].'">';
+		}
+	?>
+
+	<div class="wrapper" style="padding: 10px;">
+		<?php
+			echo $event[0]["title"];
+		?>
+	</div>
+	<div style="height: 120px;">
+		<!-- LIKES -->
+		<div class="stats-wrapper">
+			<table border="0px solid black">
+				<tr>
+					<td rowspan="2" style="height: 100px; width: 100px;">
+						<div style="height: 100px; width: 100px; background-color: #DD2E44; display: table-cell; vertical-align: middle; text-align: center;">
+							<i id="heart-solid" class="fas fa-heart" style="font-size:40px;color:white;"></i>
+						</div>
+					</td>
+					<td style="width:60%; padding-left: 10px;">
+						LIKES <br>
+						<b>
+							<?php
+								if($total_like){
+									echo $total_like[0]["total_like"];
+								}
+								else{
+									echo '0';
+								}
+								
+							?>
+						</b>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- COMMENTS -->
+		<div class="stats-wrapper">
+			<table border="0px solid black">
+				<tr>
+					<td rowspan="2" style="height: 100px; width: 100px;">
+						<div style="height: 100px; width: 100px; background-color: #00c0ef; display: table-cell; vertical-align: middle; text-align: center;">
+							<i id="heart-solid" class="fas fa-comments" style="font-size:40px;color:white;"></i>
+						</div>
+					</td>
+					<td style="width:60%; padding-left: 10px;">
+						COMMENTS <br>
+						<b>
+							<?php
+								if($total_comment){
+									echo $total_comment;
+								}
+								else{
+									echo '0';
+								}
+							?>
+						</b>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- TICKET SELL -->
+		<div class="stats-wrapper">
+			<table border="0px solid black">
+				<tr>
+					<td rowspan="2" style="height: 100px; width: 100px;">
+						<div style="height: 100px; width: 100px; background-color: #F39C12; display: table-cell; vertical-align: middle; text-align: center;">
+							<i id="heart-solid" class="fas fa-ticket-alt" style="font-size:40px;color:white;"></i>
+						</div>
+					</td>
+					<td style="width:60%; padding-left: 10px;">
+						<?php
+							if(isset($ticket)){
+								$sell = $ticket[0]["ticketTotal"] - $ticket[0]["ticket_remaining"];
+								echo 'TICKET SELL <br>
+								<b>'.$sell.'/'.$ticket[0]["ticketTotal"].'</b>';
+							}
+							else{
+								echo 'NO TICKET SELL <br>
+								<b>-</b>';
+							}
+						?>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="stats-wrapper">
+			<table border="0px solid black">
+				<tr>
+					<td rowspan="2" style="height: 100px; width: 100px;">
+						<div style="height: 100px; width: 100px; background-color: #00A65A; display: table-cell; vertical-align: middle; text-align: center;">
+							<i id="heart-solid" class="fas fa-eye" style="font-size:40px;color:white;"></i>
+						</div>
+					</td>
+					<td style="width:60%; padding-left: 10px;">
+						<?php
+							if(count($total_view) > 0){
+								echo 'VIEWS <br>
+								<b>'.$total_view[0]["total_view"].'</b>';
+							}
+							else{
+								echo 'VIEWS <br>
+								<b>0</b>';
+							}
+							
+							
+						?>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- total sales -->
+		<div class="stats-wrapper">
+			<div style="position: absolute;padding: 2px;">
+				<button onclick="gotoTransactionAccount()" class="btn btn-danger" style="font-size: 9pt; height: 30px; width: 95px; border-radius: 20px;">withdraw</button>
+			</div>
+			<table border="0px solid black">
+				<tr>
+					<td rowspan="2" style="height: 100px; width: 100px;">
+						<div style="height: 100px; width: 100px; background-color: #353E4F; display: table-cell; vertical-align: middle; text-align: center;">
+							<i id="heart-solid" class="far fa-money-bill-alt" style="font-size:40px;color:white;"></i>
+						</div>
+					</td>
+					<td style="width:60%; padding-left: 10px;">
+						<?php
+							if($sales){
+								echo 'SALES <div style="font-size: 9pt;">(Rp'.number_format($sales[0]["unit_price"],2,',','.').')</div>
+								<b>Rp'.number_format($sales[0]["tot"],2,',','.').'</b>';
+							}
+							else{
+								echo 'SALES <br>
+								<b>No sales</b>';
+							}
+							
+							
+						?>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+	</div>
+	<div style="height: 150px;"></div>
+	<div class="wrapper" style="width: 90%;">
+		<div class="form-inline" style="padding: 10px;">
+			<input type="text" id="search-ticket" class="form-control" style="width: 40%; height: 40px; background-color: #F1F1F1; border-radius: 0px;">
+			<button id="btn-search" class="btn btn-success" style="border-radius: 0px;">search</button>
+			
+		</div>
+		<table class="table table-hover" id="table-transaction">
+			<thead>
+				<th>No.</th>
+				<th>username</th>
+				<th>Number of items</th>
+				<th>Total Price</th>
+				<th>Payment method
+					<select id="payment-method-filter" class="form-control" style="width: 80%; height: 40px; background-color: #F1F1F1; border-radius: 0px; margin-left: 5px;">
+						<option value="all">All</option>
+						<option value="empty">Unselected</option>
+						<option value="e_money">E-money</option>
+						<option value="ots">On the spot</option>
+						<option value="free">Free ticket</option>
+					</select>
+				</th>
+				<th>Transaction status
+					<select id="status-filter" class="form-control" style="width: 80%; height: 40px; background-color: #F1F1F1; border-radius: 0px; margin-left: 5px;">
+						<option value="all">All</option>
+						<option value="not_complete">Not complete</option>
+						<option value="rejected">Rejected</option>
+						<option value="confirmed">Confirmed</option>
+						<option value="wait_for_confirmation">Wait for confirmation</option>
+					</select>
+				</th>
+				<th>Exchange status
+					<select id="filter-exchange" class="form-control" style="width: 80%; height: 40px; background-color: #F1F1F1; border-radius: 0px; margin-left: 5px;">
+						<option value="all">All</option>
+						<option value="yes">Exchanged</option>
+						<option value="no">Unexchanged</option>
+					</select>
+				</th>
+				<th>transaction time</th>
+			</thead>
+			<tbody>
+				<?php
+				if(isset($transaction)){
+					$i = 0;
+					foreach($transaction as $row){
+						$dt = strtotime(substr($row["transaction_time"],0,10));
+						$day = date("D", $dt);
+						$i++;
+						if($row["total_price"] == 0){
+							$price = "free ticket";
+							$payment_method = "Free ticket";
+						}
+						else{
+							$price = $row["total_price"];
+							if($row["payment_method"] == "empty"){
+								$payment_method = "Not selected yet";
+							}
+							else if($row["payment_method"] == "e_money"){
+								$payment_method = "E-money";
+							}
+							else if($row["payment_method"] == "ots"){
+								$payment_method = "On the spot";
+							}
+							else{
+								$payment_method = "Free ticket";
+							}
+						}
+						if($row["status"] == "not_complete"){
+							$status = '<span style="color: red;">Not complete</span>';
+						}
+						else if($row["status"] == "rejected"){
+							$status = "Rejected";
+						}
+						else if($row["status"] == "confirmed"){
+							$status = '<span style="color : green;"><i class="fas fa-check"></i> Confirmed';
+						}
+						else if($row["status"] == "wait_for_confirmation"){
+							$status = '<span style="color: orange;">Wait for confirmation</span>';
+						}
+
+						if($row["exchange"] == 'no'){
+							$ex = '<span style="color : red;"><i class="fas fa-times"></i></span>';
+						}
+						else if($row["exchange"] == 'yes'){
+							$ex = '<span style="color : green;"><i class="fas fa-check"></i></span>';
+						}
+
+						echo '<tr>';
+							echo '<td>'.$i.'</td>';
+							echo '<td>'.$row["name"].'</td>';
+							echo '<td>'.$row["number_of_items"].'</td>';
+							echo '<td>'.$price.'</td>';
+							echo '<td>'.$payment_method.'</td>';
+							echo '<td>'.$status.'</td>';
+							echo '<td>'.$ex.'</td>';
+							echo '<td>'.$day.', '.$row["transaction_time"].'</td>';
+						echo '</tr>';
+					}
+				}
+				?>
+			</tbody>
+		</table>
+	</div>
+		<!-- footer -->
+		<div id="footer" style="margin-top: 40px;">
+	
+	</div>
+
+	<!-- bootstrap js file -->
+	<script src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+	<script type="text/javascript"  src="<?php echo base_url(); ?>assets/js/swiper.min.js"></script>
+ 
+  <script type="text/javascript">
+  	//load header and footer
+  	$("#header").load('<?php echo site_url("c_create_event/header_load"); ?>');
+	$("#footer").load('<?php echo site_url("c_create_event/footer_load"); ?>');
+
+	//goto transaction account, to see account
+	function gotoTransactionAccount(){
+		document.location.href ='<?php echo site_url("c_create_event/transaction_account"); ?>';
+	}
+
+	function search(text){
+		if(text){
+			var id = $("#ticket_id").val();
+			$.ajax({
+				method : "post",
+				url : '<?php echo site_url("c_create_event/search_in_transaction"); ?>',
+				data : {"text" : text, "id" : id},
+				dataType : 'json',
+				success : function(res){
+					console.table(res);
+					var weeks = ["Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"];
+					$("#table-transaction > tbody").html("");
+					
+					for(var i = 0; i < res.length; i++){
+						var strDate = res[i].transaction_time.substring(0,10);
+						var myDay = Date.parse(strDate);
+						myDay = new Date(myDay).getDay();
+						var day = weeks[myDay];
+					
+						if(res[i].total_price == 0){
+							var price = "free ticket";
+							var payment_method = "Free ticket";
+						}
+						else{
+							var price = res[i].total_price;
+							if(res[i].payment_method == "empty"){
+								var payment_method = "Not selected yet";
+							}
+							else if(res[i].payment_method == "e_money"){
+								var payment_method = "E-money";
+							}
+							else if(res[i].payment_method == "ots"){
+								var payment_method = "On the spot";
+							}
+							else{
+								var payment_method = "Free ticket";
+							}
+						}
+						if(res[i].status == "not_complete"){
+							var status = '<span style="color: red;">Not complete</span>';
+						}
+						else if(res[i].status == "rejected"){
+							var status = "Rejected";
+						}
+						else if(res[i].status == "confirmed"){
+							var status = '<span style="color : green;"><i class="fas fa-check"></i> Confirmed';
+						}
+						else if(res[i].status == "wait_for_confirmation"){
+							var status = '<span style="color: orange;">Wait for confirmation</span>';
+						}
+
+						if(res[i].exchange == 'no'){
+							var ex = '<span style="color : red;"><i class="fas fa-times"></i></span>';
+						}
+						else if(res[i].exchange == 'yes'){
+							var ex = '<span style="color : green;"><i class="fas fa-check"></i></span>';
+						}
+
+						if($("#tr-"+res[i].transaction_id).length == 0){
+							$("#table-transaction").append(''+
+							'<tr id = "tr-'+res[i].transaction_id+'">'+
+								'<td>'+(i+1)+'</td>'+
+								'<td>'+res[i].name+'</td>'+
+								'<td>'+res[i].number_of_items+'</td>'+
+								'<td>'+price+'</td>'+
+								'<td>'+payment_method+'</td>'+
+								'<td>'+status+'</td>'+
+								'<td>'+ex+'</td>'+
+								'<td>'+day+', '+res[i].transaction_time+'</td>'+
+							'</tr>'
+						+'');
+						}
+					}
+				},
+				error : function(err){
+					alert("Ups, something were wrong, try again latter");
+				}
+			});
+		}
+		else{
+			alert("Can't search empty field!");
+		}
+	}
+
+	function payment_filter(text){
+		if(text == 'all'){
+			no_filter();
+		}
+		else{
+			var id = $("#ticket_id").val();
+			$.ajax({
+				method : "post",
+				url : '<?php echo site_url("c_create_event/filter_payment"); ?>',
+				data : {"text" : text, "id" : id},
+				dataType : 'json',
+				success : function(res){
+					console.table(res);
+					var weeks = ["Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"];
+					$("#table-transaction > tbody").html("");
+					
+					for(var i = 0; i < res.length; i++){
+						var strDate = res[i].transaction_time.substring(0,10);
+						var myDay = Date.parse(strDate);
+						myDay = new Date(myDay).getDay();
+						var day = weeks[myDay];
+					
+						if(res[i].total_price == 0){
+							var price = "free ticket";
+							var payment_method = "Free ticket";
+						}
+						else{
+							var price = res[i].total_price;
+							if(res[i].payment_method == "empty"){
+								var payment_method = "Not selected yet";
+							}
+							else if(res[i].payment_method == "e_money"){
+								var payment_method = "E-money";
+							}
+							else if(res[i].payment_method == "ots"){
+								var payment_method = "On the spot";
+							}
+							else{
+								var payment_method = "Free ticket";
+							}
+						}
+						if(res[i].status == "not_complete"){
+							var status = '<span style="color: red;">Not complete</span>';
+						}
+						else if(res[i].status == "rejected"){
+							var status = "Rejected";
+						}
+						else if(res[i].status == "confirmed"){
+							var status = '<span style="color : green;"><i class="fas fa-check"></i> Confirmed';
+						}
+						else if(res[i].status == "wait_for_confirmation"){
+							var status = '<span style="color: orange;">Wait for confirmation</span>';
+						}
+
+						if(res[i].exchange == 'no'){
+							var ex = '<span style="color : red;"><i class="fas fa-times"></i></span>';
+						}
+						else if(res[i].exchange == 'yes'){
+							var ex = '<span style="color : green;"><i class="fas fa-check"></i></span>';
+						}
+
+						if($("#tr-"+res[i].transaction_id).length == 0){
+							$("#table-transaction").append(''+
+							'<tr id = "tr-'+res[i].transaction_id+'">'+
+								'<td>'+(i+1)+'</td>'+
+								'<td>'+res[i].name+'</td>'+
+								'<td>'+res[i].number_of_items+'</td>'+
+								'<td>'+price+'</td>'+
+								'<td>'+payment_method+'</td>'+
+								'<td>'+status+'</td>'+
+								'<td>'+ex+'</td>'+
+								'<td>'+day+', '+res[i].transaction_time+'</td>'+
+							'</tr>'
+						+'');
+						}
+					}
+				},
+				error : function(err){
+					alert("Ups, something were wrong, try again latter");
+				}
+			});
+		}
+	}
+
+	function status_filter(text){
+		if(text == 'all'){
+			no_filter();
+		}
+		else{
+			var id = $("#ticket_id").val();
+			$.ajax({
+				method : "post",
+				url : '<?php echo site_url("c_create_event/filter_status"); ?>',
+				data : {"text" : text, "id" : id},
+				dataType : 'json',
+				success : function(res){
+					console.table(res);
+					var weeks = ["Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"];
+					$("#table-transaction > tbody").html("");
+					
+					for(var i = 0; i < res.length; i++){
+						var strDate = res[i].transaction_time.substring(0,10);
+						var myDay = Date.parse(strDate);
+						myDay = new Date(myDay).getDay();
+						var day = weeks[myDay];
+					
+						if(res[i].total_price == 0){
+							var price = "free ticket";
+							var payment_method = "Free ticket";
+						}
+						else{
+							var price = res[i].total_price;
+							if(res[i].payment_method == "empty"){
+								var payment_method = "Not selected yet";
+							}
+							else if(res[i].payment_method == "e_money"){
+								var payment_method = "E-money";
+							}
+							else if(res[i].payment_method == "ots"){
+								var payment_method = "On the spot";
+							}
+							else{
+								var payment_method = "Free ticket";
+							}
+						}
+						if(res[i].status == "not_complete"){
+							var status = '<span style="color: red;">Not complete</span>';
+						}
+						else if(res[i].status == "rejected"){
+							var status = "Rejected";
+						}
+						else if(res[i].status == "confirmed"){
+							var status = '<span style="color : green;"><i class="fas fa-check"></i> Confirmed';
+						}
+						else if(res[i].status == "wait_for_confirmation"){
+							var status = '<span style="color: orange;">Wait for confirmation</span>';
+						}
+
+						if(res[i].exchange == 'no'){
+							var ex = '<span style="color : red;"><i class="fas fa-times"></i></span>';
+						}
+						else if(res[i].exchange == 'yes'){
+							var ex = '<span style="color : green;"><i class="fas fa-check"></i></span>';
+						}
+
+						if($("#tr-"+res[i].transaction_id).length == 0){
+							$("#table-transaction").append(''+
+							'<tr id = "tr-'+res[i].transaction_id+'">'+
+								'<td>'+(i+1)+'</td>'+
+								'<td>'+res[i].name+'</td>'+
+								'<td>'+res[i].number_of_items+'</td>'+
+								'<td>'+price+'</td>'+
+								'<td>'+payment_method+'</td>'+
+								'<td>'+status+'</td>'+
+								'<td>'+ex+'</td>'+
+								'<td>'+day+', '+res[i].transaction_time+'</td>'+
+							'</tr>'
+						+'');
+						}
+					}
+				},
+				error : function(err){
+					alert("Ups, something were wrong, try again latter");
+				}
+			});
+		}
+	}
+
+	function exchange_filter(text){
+		if(text == 'all'){
+			no_filter();
+		}
+		else{
+			var id = $("#ticket_id").val();
+			$.ajax({
+				method : "post",
+				url : '<?php echo site_url("c_create_event/filter_exchange"); ?>',
+				data : {"text" : text, "id" : id},
+				dataType : 'json',
+				success : function(res){
+					console.table(res);
+					var weeks = ["Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"];
+					$("#table-transaction > tbody").html("");
+					
+					for(var i = 0; i < res.length; i++){
+						var strDate = res[i].transaction_time.substring(0,10);
+						var myDay = Date.parse(strDate);
+						myDay = new Date(myDay).getDay();
+						var day = weeks[myDay];
+					
+						if(res[i].total_price == 0){
+							var price = "free ticket";
+							var payment_method = "Free ticket";
+						}
+						else{
+							var price = res[i].total_price;
+							if(res[i].payment_method == "empty"){
+								var payment_method = "Not selected yet";
+							}
+							else if(res[i].payment_method == "e_money"){
+								var payment_method = "E-money";
+							}
+							else if(res[i].payment_method == "ots"){
+								var payment_method = "On the spot";
+							}
+							else{
+								var payment_method = "Free ticket";
+							}
+						}
+						if(res[i].status == "not_complete"){
+							var status = '<span style="color: red;">Not complete</span>';
+						}
+						else if(res[i].status == "rejected"){
+							var status = "Rejected";
+						}
+						else if(res[i].status == "confirmed"){
+							var status = '<span style="color : green;"><i class="fas fa-check"></i> Confirmed';
+						}
+						else if(res[i].status == "wait_for_confirmation"){
+							var status = '<span style="color: orange;">Wait for confirmation</span>';
+						}
+
+						if(res[i].exchange == 'no'){
+							var ex = '<span style="color : red;"><i class="fas fa-times"></i></span>';
+						}
+						else if(res[i].exchange == 'yes'){
+							var ex = '<span style="color : green;"><i class="fas fa-check"></i></span>';
+						}
+
+						if($("#tr-"+res[i].transaction_id).length == 0){
+							$("#table-transaction").append(''+
+							'<tr id = "tr-'+res[i].transaction_id+'">'+
+								'<td>'+(i+1)+'</td>'+
+								'<td>'+res[i].name+'</td>'+
+								'<td>'+res[i].number_of_items+'</td>'+
+								'<td>'+price+'</td>'+
+								'<td>'+payment_method+'</td>'+
+								'<td>'+status+'</td>'+
+								'<td>'+ex+'</td>'+
+								'<td>'+day+', '+res[i].transaction_time+'</td>'+
+							'</tr>'
+						+'');
+						}
+					}
+				},
+				error : function(err){
+					alert("Ups, something were wrong, try again latter");
+				}
+			});
+		}
+	}
+
+	function no_filter(){
+		var id = $("#ticket_id").val();
+		$.ajax({
+			method : "post",
+			url : '<?php echo site_url("c_create_event/filter_none"); ?>',
+			data : {"id" : id},
+			dataType : 'json',
+			success : function(res){
+				console.table(res);
+				var weeks = ["Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"];
+				$("#table-transaction > tbody").html("");
+				
+				for(var i = 0; i < res.length; i++){
+					var strDate = res[i].transaction_time.substring(0,10);
+					var myDay = Date.parse(strDate);
+					myDay = new Date(myDay).getDay();
+					var day = weeks[myDay];
+				
+					if(res[i].total_price == 0){
+						var price = "free ticket";
+						var payment_method = "Free ticket";
+					}
+					else{
+						var price = res[i].total_price;
+						if(res[i].payment_method == "empty"){
+							var payment_method = "Not selected yet";
+						}
+						else if(res[i].payment_method == "e_money"){
+							var payment_method = "E-money";
+						}
+						else if(res[i].payment_method == "ots"){
+							var payment_method = "On the spot";
+						}
+						else{
+							var payment_method = "Free ticket";
+						}
+					}
+					if(res[i].status == "not_complete"){
+						var status = '<span style="color: red;">Not complete</span>';
+					}
+					else if(res[i].status == "rejected"){
+						var status = "Rejected";
+					}
+					else if(res[i].status == "confirmed"){
+						var status = '<span style="color : green;"><i class="fas fa-check"></i> Confirmed';
+					}
+					else if(res[i].status == "wait_for_confirmation"){
+						var status = '<span style="color: orange;">Wait for confirmation</span>';
+					}
+
+					if(res[i].exchange == 'no'){
+						var ex = '<span style="color : red;"><i class="fas fa-times"></i></span>';
+					}
+					else if(res[i].exchange == 'yes'){
+						var ex = '<span style="color : green;"><i class="fas fa-check"></i></span>';
+					}
+
+					if($("#tr-"+res[i].transaction_id).length == 0){
+						$("#table-transaction").append(''+
+						'<tr id = "tr-'+res[i].transaction_id+'">'+
+							'<td>'+(i+1)+'</td>'+
+							'<td>'+res[i].name+'</td>'+
+							'<td>'+res[i].number_of_items+'</td>'+
+							'<td>'+price+'</td>'+
+							'<td>'+payment_method+'</td>'+
+							'<td>'+status+'</td>'+
+							'<td>'+ex+'</td>'+
+							'<td>'+day+', '+res[i].transaction_time+'</td>'+
+						'</tr>'
+					+'');
+					}
+				}
+			},
+			error : function(err){
+				alert("Ups, something were wrong, try again latter");
+			}
+		});
+		
+	}
+
+	$("#filter-exchange").change(function(){
+		var value = $("#filter-exchange").val();
+		exchange_filter(value);
+	});
+
+	$("#status-filter").on("change",function(){
+		var value = $("#status-filter").val();
+		status_filter(value);
+	});
+
+	$("#payment-method-filter").change(function(){
+		var value = $("#payment-method-filter").val();
+		payment_filter(value);
+	});
+
+	$("#btn-search").on("click", function(){
+		var text = $('#search-ticket').val();
+		search(text);
+	});
+
+	$("#search-ticket").change(function(){
+		var text = $('#search-ticket').val();
+		search(text);
+	});
+  </script>
+  <script src="<?php echo base_url(); ?>assets/js/jquery-ui.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDi8pAFaNLoQPDgUaeH9tg4sN1G3jRc50o&libraries=places&callback=initMap"
+        async defer></script>
+</body>
+
+</html>

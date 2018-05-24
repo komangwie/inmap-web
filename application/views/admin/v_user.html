@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/jquery-3.3.1.min.js'></script>
+	<script type="text/javascript" src='<?php echo base_url(); ?>assets/js/bootstrap.min.js'></script>
+	<!-- <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css"></link> -->
+	<!--styles -->
+	 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link href="<?php echo base_url(); ?>assets/css/bootstrap.min.css" rel="stylesheet">
+	<title>Admin</title>
+
+	<style>
+		 .button-text{
+	      color: white;
+	    }
+	    .wrapper{
+		    width: 90%;
+		    overflow: auto;
+		    background-color: white;
+		    box-shadow: 0 0 8px 0 rgba(0,0,0,0.2);
+		    margin-left: auto;
+		    margin-right: auto;
+		    margin-top: 2%;
+		    margin-bottom: auto;
+		}
+		.table-category {
+			width: 100%;
+		}
+
+		.loading-wrapper {
+			float: center;
+			width: 50px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.loader {
+			border: 5px solid #f3f3f3;
+			/* Light grey */
+			border-top: 5px solid #3498db;
+			/* Blue */
+			border-radius: 50%;
+			width: 50px;
+			height: 50px;
+			animation: spin 2s linear infinite;
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+	</style>
+</head>
+
+<body>
+	<div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px; background-color: #222d32;" id="mySidebar">
+		  <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
+		  <div style="width: 100%; height: 100px;"></div>
+		  <div style="background-color: #1a2226; color: gray; height: 40px; vertical-align: middle; text-align: center; padding-top: 10px;">navigation</div>
+		   <a href="<?php echo site_url('admin/c_admin_dashboard'); ?>" class="w3-bar-item w3-button button-text">Dashboard</a>
+		  <a href="<?php echo site_url('admin/c_event_category'); ?>" class="w3-bar-item w3-button button-text">Event category</a>
+		  <a href="<?php echo site_url('admin/c_user_event'); ?>" class="w3-bar-item w3-button button-text">User event</a>
+		  <a href="<?php echo site_url('admin/c_user'); ?>" class="w3-bar-item w3-button button-text">Users</a>
+		  <a href="<?php echo site_url('admin/c_admin_dashboard/success_transaction'); ?>" class="w3-bar-item w3-button button-text">Success Transaction</a>
+		</div>
+
+		<div class="w3-main" style="margin-left:200px">
+		<div class="w3-teal">
+		  <button class="w3-button w3-teal w3-xlarge w3-hide-large" onclick="w3_open()">&#9776;</button>
+		  <div class="w3-container">
+		    <h1>Users</h1>
+		  </div>
+		</div>
+
+		<div class="w3-container"  style="background-color: #F1F1F1;">
+			
+			<!-- print table category -->
+
+			<div class="table-category" align="center">
+				<div class="wrapper">
+					<div style="margin-top: 2%;">
+						
+					</div>
+				<!-- print table category -->
+				<div class="table-category" align="center">
+					<table border="1px solid" class="table table-striped" align="center" style="margin-top : 40px; width:95%;">
+						<thead id="table-head">
+							<th><input type="checkbox" id="check-all"></th>
+							<th>User Id</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Phone Number</th>
+							<th>Gender</th>
+							<th>Birthday</th>
+							<th>Action</th>
+						</thead>
+						<tbody>
+							<?php 
+			                    foreach($user as $row){
+			                        $val = $row['user_id'];
+			                        echo "<tr id='$val'>
+			                        			<td><input type='checkbox' id='$val' value='$val'></td>
+			                                    <td>" . $val ."</td>
+			                                    <td>" . $row["name"] . "</td>
+			                                    <td>" . $row["email"] . "</td>
+			                                    <td>" . $row["phone_number"] . "</td>
+			                                    <td>" . $row["gender"] . "</td>
+			                                    <td>" . $row["birthday"] . "</td>
+			                                    <td> <button onclick='deleteUser($val)' class='btn btn-danger'>Delete</button> </td>
+			                            </tr>";
+			                    }
+			                 ?>
+			            </tbody>
+					</table>
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function w3_open() {
+		    document.getElementById("mySidebar").style.display = "block";
+		}
+		function w3_close() {
+		    document.getElementById("mySidebar").style.display = "none";
+		}
+
+		function movePage(page){
+			$.ajax({
+				method : "POST",
+				url : "<?php echo site_url('admin/c_event_category/move_page'); ?>",
+				data : {"page" : page},
+				dataType : "json",
+				success : function(res){
+					// alert(JSON.stringify(res));
+					$("#table-cat tbody tr").remove();
+					for(var i = 0; i<res.length;i++){
+							var kat_id = res[i].kategori_id;
+							var kat_name = res[i].kategori_name;
+							var kat_desc = res[i].kategori_description;
+                            var btn_id = kat_id+"-btn";
+                            $("<tr id='"+kat_id+"' > <td><input type='checkbox' id="+kat_id+" value="+kat_id+"></td> <td>"+kat_id+"</td> <td>"+kat_name+"</td> <td>"+kat_desc+"</td> <td><button class='btn btn-primary' onclick='editCategory("+kat_id+")' id="+btn_id+">Edit</button> <button onclick='deleteCategory("+kat_id+")' class='btn btn-danger'>Delete</button></td></tr>").prependTo("#table-cat > tbody");
+					}
+					
+				},
+				error : function(err){
+					alert(err);
+				}
+			});
+		}
+
+		var ar = new Array();
+		$( "input" ).on( "click", function() {
+
+			var h = $( "input:checked" ).val();
+			ar.push(h);
+			console.log(ar);
+		  //$( "#log" ).html( $( "input:checked" ).val() + " is checked!" );
+		});
+		//data-toggle="modal" data-target="#exampleModal"
+		function editCategory(id){
+			$("#id-store").val(id);
+			$.ajax({
+				type : "POST",
+				url : "<?php echo site_url('admin/c_event_category/get_spesific_event') ?>",
+				data : {"id" : id},
+				dataType : "json",
+				beforeSend: function(){
+					$("#loader-edit-category").fadeIn(500);
+				},
+				success : function(res){
+					$("#category-name-edit").val(res[0].kategori_name);
+					$("#category-desc-edit").val(res[0].kategori_description);
+					$("#loader-edit-category").fadeOut(500);
+					$("#failled-message-edit").fadeOut(500);
+				},
+				error: function(res){
+					$("#loader-edit-category").fadeOut(500);
+					 $("#failled-message-edit").fadeIn(500);
+				}
+			});
+			$("#edit-modal").modal('show');
+		}
+
+		function deleteCategory(id){
+			if(confirm("Are you sure want to delte this category (id = "+id+") ?")== true){
+				$.ajax({
+					type : "POST",
+					url : "<?php echo site_url('admin/c_event_category/delete_category') ?>",
+					data : {"id" : id},
+					dataType : "json",
+					success : function(res){
+						$("#"+id).hide(500).remove();
+					},
+					error: function(res){
+						alert("error");
+					}
+				});
+			}
+			else{
+
+			}
+		}
+
+		$(document).ready(function () {
+			//check box
+			$('#check-all').change(function(){
+			    if($(this).prop('checked')){
+			        $('tbody tr td input[type="checkbox"]').each(function(){
+			            $(this).prop('checked', true);
+			        });
+			    }else{
+			        $('tbody tr td input[type="checkbox"]').each(function(){
+			            $(this).prop('checked', false);
+			        });
+			    }
+			});
+			
+			//edit
+			$("#warning-message-edit").hide();
+			$("#loader-edit-category").hide();
+            $("#failled-message-edit").hide();
+
+            //add category
+            $("#warning-message").hide();
+			$("#loader-add-category").hide();
+            $("#failled-message").hide();
+
+            //save new category
+			$("#save-category").click(function () {
+                $("#failled-message").hide();
+
+				var name = $("#category-name").val();
+				var desc = $("#category-desc").val();
+
+				if (name == '' || name == null || desc == '' || desc == null) {
+					$("#warning-message").fadeIn(800);
+				} 
+				else {
+					$("#warning-message").fadeOut(800);
+					$.ajax({
+						type: "POST",
+						url: "<?php echo site_url('admin/c_event_category/add_category'); ?>",
+						data: {
+							'name': name,
+							'desc': desc
+						},
+						dataType: 'json',
+						beforeSend: function () {
+							$("#loader-add-category").fadeIn(800);
+						},
+						success: function (res) {
+							var kat_id = res[0].kategori_id;
+							var kat_name = res[0].kategori_name;
+							var kat_desc = res[0].kategori_description;
+
+							$("#loader-add-category").fadeOut(800);
+							$("#exampleModal").modal('toggle');
+							$("#category-name").val("");
+							$("#description").val("");
+                            $("#failled-message").hide();
+                            var btn_id = kat_id+"-btn";
+                            $("<tr id='"+kat_id+"' > <td><input type='checkbox' id="+kat_id+" value="+kat_id+"></td> <td>"+kat_id+"</td> <td>"+kat_name+"</td> <td>"+kat_desc+"</td> <td><button class='btn btn-primary' onclick='editCategory("+kat_id+")' id="+btn_id+">Edit</button> <button onclick='deleteCategory("+kat_id+")' class='btn btn-danger'>Delete</button></td></tr>").prependTo("#table-cat > tbody");
+                            // $("#table-head").append("<tr id='s'> <td>we</td> <td>we</td> <td>we</td> <td>we</td> </tr>");
+						},
+						error: function (err) {
+                            $("#loader-add-category").fadeOut(800);
+                            $("#failled-message").fadeIn(800);
+							//alert("username atau password salah");
+						}
+					});
+				}
+			});
+
+			//save edit category
+			$("#save-category-edit").click(function () {
+                $("#failled-message-edit").hide();
+
+				var name = $("#category-name-edit").val();
+				var desc = $("#category-desc-edit").val();
+				var id = $("#id-store").val();
+
+				if (name == '' || name == null || desc == '' || desc == null) {
+					$("#warning-message").fadeIn(800);
+				} 
+				else {
+					$("#warning-message").fadeOut(800);
+					$.ajax({
+						type: "POST",
+						url: "<?php echo site_url('admin/c_event_category/edit_category'); ?>",
+						data: {
+							'name': name,
+							'desc': desc,
+							'id' : id
+						},
+						dataType: 'json',
+						beforeSend: function () {
+							$("#loader-edit-category").fadeIn(800);
+						},
+						success: function (res) {
+							var kat_id = res[0].kategori_id;
+							var kat_name = res[0].kategori_name;
+							var kat_desc = res[0].kategori_description;
+							var btn_id = kat_id+"-btn";
+							$("#loader-edit-category").fadeOut(800);
+							$("#edit-modal").modal('toggle');
+							$("#category-name-edit").val("");
+							$("#category-desc-edit").val("");
+                            $("#failled-message-edit").hide();
+
+                            //remove row before display edited row
+                            $("#"+kat_id).remove();
+
+                            $("<tr id='"+kat_id+"' > <td><input type='checkbox' id="+kat_id+" value="+kat_id+"></td> <td>"+kat_id+"</td> <td>"+kat_name+"</td> <td>"+kat_desc+"</td> <td><button class='btn btn-primary' onclick='editCategory("+kat_id+")' id="+btn_id+">Edit</button> <button onclick='deleteCategory("+kat_id+")' class='btn btn-danger'>Delete</button></td></tr>").prependTo("#table-cat > tbody");
+                            // $("#table-head").append("<tr id='s'> <td>we</td> <td>we</td> <td>we</td> <td>we</td> </tr>");
+						},
+						error: function (err) {
+                            $("#loader-add-category").fadeOut(800);
+                            $("#failled-message").fadeIn(800);
+							//alert("username atau password salah");
+						}
+					});
+				}
+			});
+		});
+
+	</script>
+
+</body>
+
+</html>

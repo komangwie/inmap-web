@@ -1,0 +1,66 @@
+<div id="new-search-friend">
+	<div class="label-text">Type your infriend name here</div>
+	<div id="infriend-list" style="margin-top: 5px;">
+	</div>
+	<div id="list-res">
+		<input id="search-friend" type="text" class="form-input input-event" style="margin-top: 2px;">
+	</div>
+
+	<script type="text/javascript">
+		 function addList(id, name){
+			if($("#"+id+"-bandages").length == 0){
+				$("#infriend-list").append('<div id="'+id+'-bandages" style="background-color: #4CAF50; color: white; height: 30px; display: inline-block; padding: 5px;margin-left : 5px; margin-top : 5px;">'+
+				name + 
+				'<input type="hidden" class="friend-id" value="'+id+'">'+
+				'<span onclick="deleteList('+id+')" aria-hidden="true" class="btn-close">&times;</span>'+
+				'</div>');
+			}
+		}
+
+		function deleteList(id){
+			$("#"+id+"-bandages").remove();
+		}
+
+		//search friend
+		$("#search-friend").keyup(function(){
+			var name = $("#search-friend").val();
+			if(name || name != null){
+				$.ajax({
+					method : "POST",
+					url :  "<?php echo site_url('c_add_infriend/search_in_friend_list'); ?>",
+					data : {"name" : name},
+					dataType : 'json',
+					success : function(res){
+						//console.table(res);
+						$(".result-list").remove();
+						
+							for(var i=0;i<res.length;i++){
+								var base ="";
+								if(res[i].original_photo == null){
+									base = "<?php echo base_url();?>/assets/img/user.png";
+								}
+								else{
+									base = "<?php echo base_url();?>" +res[i].original_photo;
+								}
+								
+								$("#list-res").append('<div onclick="addList('+res[i].friend_id+',\''+res[i].name+'\')" class="result-list" id="'+res[i].friend_id+'" style="width: 100%; height: 50px;  background-color: white; box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);">'+
+									'<div class="wrapper" ><table border="0px solid black" style="width: 100%;"><tr><td style="width:55px;"><div class="photo"><img src="'+base+'" style="width:50px; height: 50px;" ></div></td><td style="width:40%;"><div>'+res[i].name+'</div></td><td style="text-align:right;"></td></tr></table></div>'+
+								'</div>');
+							}
+							
+					},
+					error : function(err){
+						console.log(err);
+						alert('error occured when add friend');
+					}
+				});
+			}
+		});
+		$("#search-friend").blur(function()
+		{
+		    if( !$(this).val() || $(this).val().length === 0 ) {
+		          $(".result-list").remove();
+		    }
+		});
+	</script>
+</div>
